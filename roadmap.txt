@@ -1,0 +1,25 @@
+# SEC Filing Tools Roadmap
+
+## 2025-03-07: Enhanced SEC Filing Downloader with Conversational Interface
+
+### Changes Made:
+1. Added conversational parameter extraction inspired by sec_chatv1.py
+   - Implemented natural language understanding to extract company, form type, and year
+   - Added confirmation mechanism to verify extracted parameters
+   - Built interactive conversation loop to fill in missing parameters
+
+2. Added interactive mode to sec_filing_downloader.py
+   - Added --interactive command-line flag
+   - Created process_conversation() method to handle interactive sessions
+   - Maintained backward compatibility with existing command-line usage
+
+3. Code Improvements:
+   - Simplified LLM initialization code in CompanyLookup._get_llm()
+   - Set temperature to 0.0 for deterministic responses
+   - Removed unnecessary model branching logic
+
+### Future Development:
+1. Add support for more specific section extraction in conversational mode
+2. Implement conversation memory to maintain context across multiple queries
+3. Add support for industry and company-size based queries
+4. Consider integrating full SEC Chatbot functionality into the downloader
