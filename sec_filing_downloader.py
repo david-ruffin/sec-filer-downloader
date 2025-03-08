@@ -31,8 +31,9 @@ if not OPENAI_API_KEY:
 class CompanyLookup:
     """Class for looking up company information in the SEC database."""
     
-    def __init__(self, company_tickers_path: str = "reference_data/company_tickers.json"):
+    def __init__(self, company_tickers_path: str = "reference_data/company_tickers.json", llm: Optional[BaseLanguageModel] = None):
         self.company_data = self._load_company_data(company_tickers_path)
+        self.llm = llm
         
     def _load_company_data(self, company_tickers_path: str) -> Dict:
         """Load company data from the JSON file."""
@@ -47,7 +48,8 @@ class CompanyLookup:
     def find_company_by_name(self, company_name: str) -> Optional[Dict]:
         """Find company information by name or ticker."""
         # Use LLM to help with flexible matching
-        llm = self._get_llm()
+        if not self.llm:
+            self.llm = self._get_llm()
         
         # Create a prompt template for company name matching
         prompt_template = PromptTemplate(
@@ -62,7 +64,7 @@ class CompanyLookup:
         )
         
         # Create a runnable sequence instead of LLMChain
-        chain = prompt_template | llm
+        chain = prompt_template | self.llm
         # Use invoke instead of run
         result = chain.invoke({"company_name": company_name})
         normalized_name = result.strip() if isinstance(result, str) else result.content.strip()
@@ -82,12 +84,14 @@ class CompanyLookup:
         return None
     
     def _get_llm(self) -> BaseLanguageModel:
-        """Get the LLM instance for company name matching."""
-        # Use ChatOpenAI for consistent behavior and simpler implementation
+        """Create a new LLM instance if one wasn't provided.
+        
+        Note: This is a fallback method in case an LLM wasn't passed to the constructor.
+        """
         return ChatOpenAI(
             model_name=OPENAI_MODEL,
             openai_api_key=OPENAI_API_KEY,
-            temperature=0.0  # Use 0.0 for deterministic, factual responses
+            temperature=0.0
         )
 
 class SecFilingDownloader:
@@ -97,13 +101,16 @@ class SecFilingDownloader:
         self.sec_api_key = sec_api_key
         self.query_api = QueryApi(api_key=sec_api_key)
         self.pdf_generator_api = PdfGeneratorApi(api_key=sec_api_key)
-        self.company_lookup = CompanyLookup()
-        # Initialize LLM for conversation
+        
+        # Initialize LLM for conversation and company lookup
         self.llm = ChatOpenAI(
             model_name=OPENAI_MODEL,
             openai_api_key=OPENAI_API_KEY,
             temperature=0.0
         )
+        
+        # Pass the LLM to CompanyLookup
+        self.company_lookup = CompanyLookup(llm=self.llm)
         
     def get_sec_filing(self, cik: str, form_type: str, year: str) -> Dict:
         """Get a filing for a given CIK, form type, and year range."""
