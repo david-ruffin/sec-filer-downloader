@@ -144,3 +144,10 @@
 3. Add support for industry and company-size based queries
 4. Consider integrating full SEC Chatbot functionality into the downloader
 5. Adapt the codebase for web application usage
+
+
+### Next Steps:
+1. Integrate main.py and sec_analyzer.py
+2. Determine how user will view both outputs
+3. Create Front end
+4. Host on web server
