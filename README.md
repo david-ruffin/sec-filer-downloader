@@ -90,11 +90,7 @@ sec-filing-downloader/
 ├── reference_data/             # Reference data for company lookup
 │   └── company_tickers.json    # SEC company database
 │
-├── Tests/                      # API test scripts
-│   ├── test_xbrl_api.py            # Tests for XBRL to JSON conversion
-│   ├── test_full_text_search_api.py # Tests for full-text search
-│   ├── test_query_api.py           # Tests for filing search
-│   └── test_extractor_api.py       # Tests for filing content extraction
+├── Tests/                      # Directory for unit tests
 │
 ├── example/                    # Example API usage scripts
 │   ├── secapi_xbrl_api.py          # Example XBRL API usage
@@ -156,41 +152,41 @@ Downloaded files are saved in the `filings/` directory with the naming conventio
 - **API errors**: Ensure your API keys are correctly set in the `.env` file
 - **Check logs**: Review the logs in the `Logs/` directory for detailed error information
 
-## SEC-API Test Scripts
+## SEC-API Example Scripts
 
-The project includes test scripts for validating SEC-API functionality. These scripts are located in the `Tests/` directory and can be run individually to test different aspects of the SEC-API.
+The project includes example scripts for demonstrating SEC-API functionality. These scripts are located in the `example/` directory and can be run individually to understand different aspects of the SEC-API.
 
-### Available Test Scripts
+### Available Example Scripts
 
-1. **XBRL API Tests** (`test_xbrl_api.py`)
-   - Tests the conversion of XBRL data to JSON format
+1. **XBRL API Examples** (`secapi_xbrl_api.py`)
+   - Demonstrates the conversion of XBRL data to JSON format
    - Retrieves Apple's 10-K filing and extracts financial data
-   - Demonstrates accessing income statement items
+   - Shows how to access income statement items
 
-2. **Full-Text Search API Tests** (`test_full_text_search_api.py`)
-   - Tests searching across SEC filings for specific text content
+2. **Full-Text Search API Examples** (`secapi_full_text_search_api.py`)
+   - Demonstrates searching across SEC filings for specific text content
    - Uses CIK parameter to filter for Apple Inc. filings
-   - Demonstrates parsing and displaying search results
+   - Shows how to parse and display search results
 
-3. **Query API Tests** (`test_query_api.py`)
-   - Tests finding specific filings by form type, company, and date
-   - Demonstrates searching for 10-K, 10-Q, and 8-K filings
-   - Shows how to extract metadata from filing results
+3. **Query API Examples** (`secapi_query_api.py`)
+   - Demonstrates finding specific filings by form type, company, and date
+   - Shows how to search for 10-K, 10-Q, and 8-K filings
+   - Illustrates how to extract metadata from filing results
 
-4. **Extractor API Tests** (`test_extractor_api.py`)
-   - Tests extracting specific sections from filings
-   - Demonstrates retrieving risk factors from 10-K filings
-   - Shows content extraction capabilities
+4. **Extractor API Examples** (`secapi_extractor_api.py`)
+   - Demonstrates extracting specific sections from filings
+   - Shows how to retrieve risk factors from 10-K filings
+   - Illustrates content extraction capabilities
 
-### Running the Tests
+### Running the Example Scripts
 
-To run a test script, use Python to execute the desired test file:
+To run an example script, use Python to execute the desired file:
 
 ```bash
-python Tests/test_xbrl_api.py
+python example/secapi_xbrl_api.py
 ```
 
-> **Note**: These tests require a valid SEC-API key in your `.env` file.
+> **Note**: These examples require a valid SEC-API key in your `.env` file.
 
 ## License
 
