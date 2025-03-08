@@ -1,0 +1,2285 @@
+Link: https://sec-api.io/docs/xbrl-to-json-converter-api
+
+XBRL to JSON Converter API
+Parse and standardize any XBRL data and convert it to standardized JSON format in seconds without coding. Extract financial statements from annual and quarterly reports (10-K, 10-Q, 20-F, 40-F), offerings such as S-1 filings, and post-effective amendements for registration statements (POS AM), accounting policies and footnotes, risk-return summaries of mutual fund and ETF prospectuses (485BPOS) and general information from event filings (8-K). All XBRL-supported filing types can be converterd.
+
+Income Statement
+Balance Sheet
+Cash Flow Statement
+Example: XBRL Income Statement from 10-K Filing in JSON Format
+{
+  "StatementsOfIncome": {
+    "RevenueFromContractWithCustomerExcludingAssessedTax": [
+      {
+        "decimals": "-6",
+        "unitRef": "U_USD",
+        "period": {
+          "startDate": "2023-07-01",
+          "endDate": "2024-06-30"
+        },
+        "value": "245122000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "U_USD",
+        "period": {
+          "startDate": "2022-07-01",
+          "endDate": "2023-06-30"
+        },
+        "value": "211915000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "U_USD",
+        "period": {
+          "startDate": "2023-07-01",
+          "endDate": "2024-06-30"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "us-gaap:ProductMember"
+        },
+        "value": "64773000000"
+      },
+      // ... more revenue entries
+    ],
+    "CostOfGoodsAndServicesSold": [ "..." ],
+    "GrossProfit": [ "..." ],
+    "ResearchAndDevelopmentExpense": [ "..." ],
+    "SellingGeneralAndAdministrativeExpense": [ "..." ],
+    "OperatingExpenses": [ "..." ],
+    "OperatingIncomeLoss": [ "..." ],
+    "NonoperatingIncomeExpense": [ "..." ],
+    "IncomeTaxExpenseBenefit": [ "..." ],
+    "NetIncomeLoss": [ "..." ],
+    "EarningsPerShareBasic": [ "..." ],
+    "EarningsPerShareDiluted": [ "..." ],
+    "WeightedAverageNumberOfSharesOutstandingBasic": [ "..." ],
+    "WeightedAverageNumberOfDilutedSharesOutstanding": [ "..." ]
+    // ... more income statement items depending on the company
+}
+The entire US GAAP taxonomy is fully supported. All XBRL items are fully converted into JSON, including us-gaap, dei and custom items. XBRL facts are automatically mapped to their respective context including period instants and date ranges.
+
+Any XBRL can be directly converted into Python pandas dataframes.
+
+All financial statements and all US GAAP elements are supported, for example:
+
+Income statement (consolidated statement of operations)
+Balance sheet (consolidated statement of balance sheets)
+Cash flow statement (consolidated statement of cash flows)
+And many more.
+Examples of Income Statement Items
+
+RevenueFromContractWithCustomerExcludingAssessedTax
+CostOfGoodsAndServicesSold
+GrossProfit
+ResearchAndDevelopmentExpense
+SellingGeneralAndAdministrativeExpense
+OperatingExpenses
+OperatingIncomeLoss
+NetIncomeLoss
+EarningsPerShareBasic
+Examples of Balance Sheet Items
+
+AccountsReceivableNetCurrent
+AccountsPayableCurrent
+LiabilitiesCurrent
+LongTermDebtCurrent
+AssetsNoncurrent
+RetainedEarningsAccumulatedDeficit
+CashAndCashEquivalentsAtCarryingValue
+InventoryNet
+You can find a full list of all US-GAAP items authored by the Financial Accounting Standards Board here: https://www.fasb.org/xbrl
+All cover page items are supported, for example:
+
+DocumentPeriodEndDate
+EntityFileNumber
+EntityRegistrantName
+EntityIncorporationStateCountryCode
+EntityTaxIdentificationNumber
+Security12bTitle
+TradingSymbol
+SecurityExchangeName
+EntityPublicFloat
+CurrentFiscalYearEndDate
+Dataset size:
+All XBRL data of any XBRL-friendly filing from 2005 to present.
+Data update frequency:
+XBRL-JSON data of new filings is available in less than 300 milliseconds after the filing is published on EDGAR.
+Survivorship bias free:
+Yes. The XBRL to JSON Converter API includes all XBRL data of any XBRL-friendly filing from 2005 to present, from filer entities that are still active and those that are no longer active.
+Supported XBRL Filing Types
+The following is a list of all supported filing types categorized by filer type:
+
+Operating Companies:
+10-K, 10-K/A, 10-KT, 10-KT/A, 10-Q, 10-Q/A, 10-QT, 10-12B, 10-QT/A, 10-12B/A, 10-12G, 10-12G/A, 8-K, 8-K/A, 8-K12B, 8-K12B/A, 8-K12G3, 8-K12G3/A, 8-K15D5, 8-K15D5/A, 20-F, 20-F/A, 20FR12B, 20FR12B/A, 20FR12G, 20FR12G/A, 40-F, 40-F/A, 40FR12B, 40FR12B/A, 40FR12G, 40FR12G/A, 6-K, 6-K/A, SP 15D2, SP 15D2/A, S-1, S-1/A, S-1MEF, S-3, S-3/A, S-3ASR, S-3D, S-3DPOS, S-3MEF, S-4, S-4/A, S-4EF, S-4MEF, S-4 POS, S-11, S-11/A, S-11MEF, POS AM, POS EX, POSASR, F-1, F-1/A, F-1MEF, F-3, F-3/A, F-3ASR, F-3D, F-3DPOS, F-3MEF, F-4, F-4/A, F-4EF, F-4MEF, F-4 POS, F-10, F-10/A, F-10EF, F-10POS, DEF 14A, DEF 14C, DEFA14A, DEFA14C, DEFC14A, DEFC14C, DEFM14A, DEFM14C, DEFR14A, DEFR14C, PRE 14A, PRE 14C, PREC14A, PREC14C, PREM14A, PREM14C, PRER14A, PRER14C
+Attachement type
+EX-101.*
+Investment Companies:
+485BPOS, 487, 497, 485APOS, 485BXT, N-1A, N-1A/A, N-2, N-2/A, N-2ASR, N-2 POSASR, N-2MEF, POS EX, POS462B, POS462C, 486BXT, 486APOS, 486BPOS, 486BXT, POS 8C, POS AMI, 424A, 424B1, 424B2, 424B3, 424B4, 424B5, 424B7, 424B8, N-CSR, N-CSR/A, N-CSRS, N-CSRS/A, SC 13E3, SC 13E3/A, DEF 14A, DEF 14C, DEFA14A, DEFA14C, DEFC14A, DEFM14A, DEFM14C DEFR14A, DEFR14C, 8-K, 8-K/A, 8-K12B, 8-K12B/A, 8-K12G3, 8-K12G3/A, 8-K15D5, 8-K15D5/A, 10-K, 10-K/A, 10-KT, 10-KT/A, 10-Q, 10-Q/A, 10-QT, 10-QT/A, 497, N-3, N-3/A, N-4, N-4/A, N-6, N-6/A, 497J, DEFC14C
+Attachement type
+EX-101.*
+Security-Based Swap Data Repositories:
+SDR, SDR/A, SDR-A, SDR-W
+Attachement type
+EX-99.SDR K.*, EX-99.SDR L.*
+API Endpoint
+XML-XBRL data attached to an EDGAR filing can be converted to JSON format by sending a GET HTTP request with the XBRL file URL, the HTML filing URL, or the accession number of the filing to the following endpoint:
+
+https://api.sec-api.io/xbrl-to-json
+Supported HTTP method: GET
+
+Response content type: JSON. The response includes all XBRL items in JSON format.
+
+Authentication
+To authenticate requests to the XBRL to JSON Converter API, use the API key shown in your user profile. Utilize the API key in one of two ways. Choose the method that best fits your implementation:
+
+Set as Authorization header. Before making a GET request to https://api.sec-api.io/xbrl-to-json, set the Authorization header to YOUR_API_KEY.
+Set as query parameter ?token=YOUR_API_KEY: Perform a GET request to https://api.sec-api.io/xbrl-to-json?token=YOUR_API_KEY&htm-url=....
+Request Parameters
+The XBRL-to-JSON Converter API accepts three diferent query parameters for converting XBRL data to JSON. Provide the URL of the filing, the URL of the XBRL file, or the accession number of the filing. Choose the method that best fits your implementation:
+
+htm-url: Provide the URL of the filing ending with .htm or .html. Both URLs, to the filing itself and the index page, are accepted.
+Example URLs:
+https://www.sec.gov/Archives/edgar/data/1318605/000156459021004599/tsla-10k_20201231.htm
+https://www.sec.gov/Archives/edgar/data/914243/000091424322000011/0000914243-22-000011-index.html
+xbrl-url: Provide the URL of the XBRL file ending with .xml. The XBRL file URL can be found in the dataFiles array returned by the Query API. The array item always has the description EXTRACTED XBRL INSTANCE DOCUMENT.
+Example URLs:
+https://www.sec.gov/Archives/edgar/data/1318605/000156459021004599/tsla-10k_20201231_htm.xml
+https://www.sec.gov/Archives/edgar/data/914243/000091424322000011/ck0000914243-20210930_htm.xml
+accession-no: Provide the accession number of the filing, e.g. 0001564590-21-004599
+Utilize the Query API to generate a list of the most recent 10-K filings that include XBRL files. The search query format is as follows and can be tested in the sandbox.
+
+formType:"10-K" AND dataFiles.description:"XBRL INSTANCE DOCUMENT"
+Request Examples
+The following examples demonstrate how to convert XBRL data to JSON using the XBRL-to-JSON Converter API with the three different query parameters: htm-url, xbrl-url, and accession-no.
+
+htm-url Example
+https://api.sec-api.io/xbrl-to-json?
+htm-url=https://www.sec.gov/Archives/edgar/data/1318605/000156459021004599/tsla-10k_20201231.htm&
+token=YOUR_API_KEY
+
+xbrl-url Example
+https://api.sec-api.io/xbrl-to-json?
+xbrl-url=https://www.sec.gov/Archives/edgar/data/1318605/000156459021004599/tsla-10k_20201231_htm.xml&
+token=YOUR_API_KEY
+
+accession-no Example
+https://api.sec-api.io/xbrl-to-json?
+accession-no=0001564590-21-004599&
+token=YOUR_API_KEY
+
+Response Format
+The response represents a JSON object including all financial statements, the cover page and any custom items the company deems important to be published.
+
+Standardized financial statements are:
+
+StatementsOfIncome
+StatementsOfIncomeParenthetical
+StatementsOfComprehensiveIncome
+StatementsOfComprehensiveIncomeParenthetical
+BalanceSheets
+BalanceSheetsParenthetical
+StatementsOfCashFlows
+StatementsOfCashFlowsParenthetical
+StatementsOfShareholdersEquity
+StatementsOfShareholdersEquityParenthetical
+Variants such as ConsolidatedStatementsofOperations or ConsolidatedStatementsOfLossIncome are automatically renamed to their root name, e.g. StatementsOfIncome.
+
+All US GAAP item names are standardized. For example, us-gaap_SalesRevenueGoodsNet is renamed to SalesRevenueGoodsNet ("us-gaap_" was removed). Please note that GAAP items are not renamed to its parent name. For example, us-gaap_SalesRevenueGoodsNet is not renamed to Revenue. There are many items representing different types of revenue but none of them are renamed to Revenue - the original GAAP item name is always maintained.
+
+Response Structure
+A financial statement is represented as an object.
+An object holds all US GAAP items, for example RevenueFromContractWithCustomerExcludingAssessedTax.
+An object key is an array holding all US GAAP item facts. For example, RevenueFromContractWithCustomerExcludingAssessedTax is an array where each item represents a revenue value including the period with a start and end date, unit reference (e.g. USD) and decimals (e.g. -6) indicating that the last 6 digits are rounded.
+The period is always an object with startDate and endDate (e.g. applicable to income statements) or with an instant (e.g. applicable to balance sheets).
+The segment key (optional) can be an object or array of objects. A segment object includes a dimension (e.g. srt:ProductOrServiceAxis) and a value (e.g. us-gaap:ProductMember). A segment is used to break-down a US GAAP element into more details. For example, a Revenue item with the srt:ProductOrServiceAxis dimension and us-gaap:ProductMember value shows how much revenue was generated with product sales for the given period - excluding service and other sales. Revenues can also be split into geographies (e.g. US, Europe, APAC) or product segments (e.g. iPhone vs Mac sales) using the dimensions.
+Income Statement - Example Item
+JSON
+{
+  "StatementsOfIncome": {
+    "RevenueFromContractWithCustomerExcludingAssessedTax": [
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "value": "274515000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2018-09-30",
+          "endDate": "2019-09-28"
+        },
+        "value": "260174000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2017-10-01",
+          "endDate": "2018-09-29"
+        },
+        "value": "265595000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "us-gaap:ProductMember"
+        },
+        "value": "220747000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2018-09-30",
+          "endDate": "2019-09-28"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "us-gaap:ProductMember"
+        },
+        "value": "213883000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2017-10-01",
+          "endDate": "2018-09-29"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "us-gaap:ProductMember"
+        },
+        "value": "225847000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "us-gaap:ServiceMember"
+        },
+        "value": "53768000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2018-09-30",
+          "endDate": "2019-09-28"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "us-gaap:ServiceMember"
+        },
+        "value": "46291000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2017-10-01",
+          "endDate": "2018-09-29"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "us-gaap:ServiceMember"
+        },
+        "value": "39748000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "aapl:IPhoneMember"
+        },
+        "value": "137781000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2018-09-30",
+          "endDate": "2019-09-28"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "aapl:IPhoneMember"
+        },
+        "value": "142381000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2017-10-01",
+          "endDate": "2018-09-29"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "aapl:IPhoneMember"
+        },
+        "value": "164888000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "aapl:MacMember"
+        },
+        "value": "28622000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2018-09-30",
+          "endDate": "2019-09-28"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "aapl:MacMember"
+        },
+        "value": "25740000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2017-10-01",
+          "endDate": "2018-09-29"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "aapl:MacMember"
+        },
+        "value": "25198000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "aapl:IPadMember"
+        },
+        "value": "23724000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2018-09-30",
+          "endDate": "2019-09-28"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "aapl:IPadMember"
+        },
+        "value": "21280000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2017-10-01",
+          "endDate": "2018-09-29"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "aapl:IPadMember"
+        },
+        "value": "18380000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "aapl:WearablesHomeandAccessoriesMember"
+        },
+        "value": "30620000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2018-09-30",
+          "endDate": "2019-09-28"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "aapl:WearablesHomeandAccessoriesMember"
+        },
+        "value": "24482000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2017-10-01",
+          "endDate": "2018-09-29"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "aapl:WearablesHomeandAccessoriesMember"
+        },
+        "value": "17381000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "us-gaap:StatementBusinessSegmentsAxis",
+          "value": "aapl:AmericasSegmentMember"
+        },
+        "value": "124556000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2018-09-30",
+          "endDate": "2019-09-28"
+        },
+        "segment": {
+          "dimension": "us-gaap:StatementBusinessSegmentsAxis",
+          "value": "aapl:AmericasSegmentMember"
+        },
+        "value": "116914000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2017-10-01",
+          "endDate": "2018-09-29"
+        },
+        "segment": {
+          "dimension": "us-gaap:StatementBusinessSegmentsAxis",
+          "value": "aapl:AmericasSegmentMember"
+        },
+        "value": "112093000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "us-gaap:StatementBusinessSegmentsAxis",
+          "value": "aapl:EuropeSegmentMember"
+        },
+        "value": "68640000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2018-09-30",
+          "endDate": "2019-09-28"
+        },
+        "segment": {
+          "dimension": "us-gaap:StatementBusinessSegmentsAxis",
+          "value": "aapl:EuropeSegmentMember"
+        },
+        "value": "60288000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2017-10-01",
+          "endDate": "2018-09-29"
+        },
+        "segment": {
+          "dimension": "us-gaap:StatementBusinessSegmentsAxis",
+          "value": "aapl:EuropeSegmentMember"
+        },
+        "value": "62420000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "us-gaap:StatementBusinessSegmentsAxis",
+          "value": "aapl:GreaterChinaSegmentMember"
+        },
+        "value": "40308000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2018-09-30",
+          "endDate": "2019-09-28"
+        },
+        "segment": {
+          "dimension": "us-gaap:StatementBusinessSegmentsAxis",
+          "value": "aapl:GreaterChinaSegmentMember"
+        },
+        "value": "43678000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2017-10-01",
+          "endDate": "2018-09-29"
+        },
+        "segment": {
+          "dimension": "us-gaap:StatementBusinessSegmentsAxis",
+          "value": "aapl:GreaterChinaSegmentMember"
+        },
+        "value": "51942000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "us-gaap:StatementBusinessSegmentsAxis",
+          "value": "aapl:JapanSegmentMember"
+        },
+        "value": "21418000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2018-09-30",
+          "endDate": "2019-09-28"
+        },
+        "segment": {
+          "dimension": "us-gaap:StatementBusinessSegmentsAxis",
+          "value": "aapl:JapanSegmentMember"
+        },
+        "value": "21506000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2017-10-01",
+          "endDate": "2018-09-29"
+        },
+        "segment": {
+          "dimension": "us-gaap:StatementBusinessSegmentsAxis",
+          "value": "aapl:JapanSegmentMember"
+        },
+        "value": "21733000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "us-gaap:StatementBusinessSegmentsAxis",
+          "value": "aapl:RestOfAsiaPacificSegmentMember"
+        },
+        "value": "19593000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2018-09-30",
+          "endDate": "2019-09-28"
+        },
+        "segment": {
+          "dimension": "us-gaap:StatementBusinessSegmentsAxis",
+          "value": "aapl:RestOfAsiaPacificSegmentMember"
+        },
+        "value": "17788000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2017-10-01",
+          "endDate": "2018-09-29"
+        },
+        "segment": {
+          "dimension": "us-gaap:StatementBusinessSegmentsAxis",
+          "value": "aapl:RestOfAsiaPacificSegmentMember"
+        },
+        "value": "17407000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "srt:StatementGeographicalAxis",
+          "value": "country:US"
+        },
+        "value": "109197000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2018-09-30",
+          "endDate": "2019-09-28"
+        },
+        "segment": {
+          "dimension": "srt:StatementGeographicalAxis",
+          "value": "country:US"
+        },
+        "value": "102266000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2017-10-01",
+          "endDate": "2018-09-29"
+        },
+        "segment": {
+          "dimension": "srt:StatementGeographicalAxis",
+          "value": "country:US"
+        },
+        "value": "98061000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "srt:StatementGeographicalAxis",
+          "value": "country:CN"
+        },
+        "value": "40308000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2018-09-30",
+          "endDate": "2019-09-28"
+        },
+        "segment": {
+          "dimension": "srt:StatementGeographicalAxis",
+          "value": "country:CN"
+        },
+        "value": "43678000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2017-10-01",
+          "endDate": "2018-09-29"
+        },
+        "segment": {
+          "dimension": "srt:StatementGeographicalAxis",
+          "value": "country:CN"
+        },
+        "value": "51942000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "srt:StatementGeographicalAxis",
+          "value": "aapl:OtherCountriesMember"
+        },
+        "value": "125010000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2018-09-30",
+          "endDate": "2019-09-28"
+        },
+        "segment": {
+          "dimension": "srt:StatementGeographicalAxis",
+          "value": "aapl:OtherCountriesMember"
+        },
+        "value": "114230000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2017-10-01",
+          "endDate": "2018-09-29"
+        },
+        "segment": {
+          "dimension": "srt:StatementGeographicalAxis",
+          "value": "aapl:OtherCountriesMember"
+        },
+        "value": "115592000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2020-06-28",
+          "endDate": "2020-09-26"
+        },
+        "value": "64698000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2020-03-29",
+          "endDate": "2020-06-27"
+        },
+        "value": "59685000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-12-29",
+          "endDate": "2020-03-28"
+        },
+        "value": "58313000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2019-12-28"
+        },
+        "value": "91819000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-06-30",
+          "endDate": "2019-09-28"
+        },
+        "value": "64040000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-03-31",
+          "endDate": "2019-06-29"
+        },
+        "value": "53809000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2018-12-30",
+          "endDate": "2019-03-30"
+        },
+        "value": "58015000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2018-09-30",
+          "endDate": "2018-12-29"
+        },
+        "value": "84310000000"
+      }
+    ],
+    "CostOfGoodsAndServicesSold": [
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "us-gaap:ProductMember"
+        },
+        "value": "151286000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2018-09-30",
+          "endDate": "2019-09-28"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "us-gaap:ProductMember"
+        },
+        "value": "144996000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2017-10-01",
+          "endDate": "2018-09-29"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "us-gaap:ProductMember"
+        },
+        "value": "148164000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "us-gaap:ServiceMember"
+        },
+        "value": "18273000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2018-09-30",
+          "endDate": "2019-09-28"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "us-gaap:ServiceMember"
+        },
+        "value": "16786000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2017-10-01",
+          "endDate": "2018-09-29"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "us-gaap:ServiceMember"
+        },
+        "value": "15592000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "value": "169559000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2018-09-30",
+          "endDate": "2019-09-28"
+        },
+        "value": "161782000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2017-10-01",
+          "endDate": "2018-09-29"
+        },
+        "value": "163756000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "segment": [
+          {
+            "dimension": "us-gaap:DerivativeInstrumentRiskAxis",
+            "value": "us-gaap:ForeignExchangeContractMember"
+          },
+          {
+            "dimension": "us-gaap:ReclassificationOutOfAccumulatedOtherComprehensiveIncomeAxis",
+            "value": "us-gaap:ReclassificationOutOfAccumulatedOtherComprehensiveIncomeMember"
+          },
+          {
+            "dimension": "us-gaap:StatementEquityComponentsAxis",
+            "value": "us-gaap:AccumulatedGainLossNetCashFlowHedgeParentMember"
+          }
+        ],
+        "value": "-584000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2018-09-30",
+          "endDate": "2019-09-28"
+        },
+        "segment": [
+          {
+            "dimension": "us-gaap:DerivativeInstrumentRiskAxis",
+            "value": "us-gaap:ForeignExchangeContractMember"
+          },
+          {
+            "dimension": "us-gaap:ReclassificationOutOfAccumulatedOtherComprehensiveIncomeAxis",
+            "value": "us-gaap:ReclassificationOutOfAccumulatedOtherComprehensiveIncomeMember"
+          },
+          {
+            "dimension": "us-gaap:StatementEquityComponentsAxis",
+            "value": "us-gaap:AccumulatedGainLossNetCashFlowHedgeParentMember"
+          }
+        ],
+        "value": "-482000000"
+      }
+    ],
+    "GrossProfit": [ "..." ],
+    "ResearchAndDevelopmentExpense": [ "..." ],
+    "SellingGeneralAndAdministrativeExpense": [ "..." ],
+    "OperatingExpenses": [ "..." ],
+    "OperatingIncomeLoss": [ "..." ],
+    "NonoperatingIncomeExpense": [ "..." ],
+    "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest": [ "..." ],
+    "IncomeTaxExpenseBenefit": [ "..." ],
+    "NetIncomeLoss": [ "..." ],
+    "EarningsPerShareBasic": [ "..." ],
+    "EarningsPerShareDiluted": [ "..." ],
+    "WeightedAverageNumberOfSharesOutstandingBasic": [ "..." ],
+    "WeightedAverageNumberOfDilutedSharesOutstanding": [ "..." ]
+  }
+}
+Balance Sheet - Example Item
+JSON
+{
+  "BalanceSheets": {
+    "CashAndCashEquivalentsAtCarryingValue": [
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2020-09-26"
+        },
+        "value": "38016000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2019-09-28"
+        },
+        "value": "48844000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "us-gaap:FinancialInstrumentAxis",
+          "value": "us-gaap:CashMember"
+        },
+        "value": "17773000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2020-09-26"
+        },
+        "segment": [
+          {
+            "dimension": "us-gaap:FairValueByFairValueHierarchyLevelAxis",
+            "value": "us-gaap:FairValueInputsLevel1Member"
+          },
+          {
+            "dimension": "us-gaap:FinancialInstrumentAxis",
+            "value": "us-gaap:MoneyMarketFundsMember"
+          }
+        ],
+        "value": "2171000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "us-gaap:FairValueByFairValueHierarchyLevelAxis",
+          "value": "us-gaap:FairValueInputsLevel1Member"
+        },
+        "value": "2171000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2020-09-26"
+        },
+        "segment": [
+          {
+            "dimension": "us-gaap:FairValueByFairValueHierarchyLevelAxis",
+            "value": "us-gaap:FairValueInputsLevel2Member"
+          },
+          {
+            "dimension": "us-gaap:FinancialInstrumentAxis",
+            "value": "us-gaap:USTreasurySecuritiesMember"
+          }
+        ],
+        "value": "8580000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2020-09-26"
+        },
+        "segment": [
+          {
+            "dimension": "us-gaap:FairValueByFairValueHierarchyLevelAxis",
+            "value": "us-gaap:FairValueInputsLevel2Member"
+          },
+          {
+            "dimension": "us-gaap:FinancialInstrumentAxis",
+            "value": "us-gaap:USGovernmentAgenciesDebtSecuritiesMember"
+          }
+        ],
+        "value": "2009000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2020-09-26"
+        },
+        "segment": [
+          {
+            "dimension": "us-gaap:FairValueByFairValueHierarchyLevelAxis",
+            "value": "us-gaap:FairValueInputsLevel2Member"
+          },
+          {
+            "dimension": "us-gaap:FinancialInstrumentAxis",
+            "value": "us-gaap:ForeignGovernmentDebtSecuritiesMember"
+          }
+        ],
+        "value": "255000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2020-09-26"
+        },
+        "segment": [
+          {
+            "dimension": "us-gaap:FairValueByFairValueHierarchyLevelAxis",
+            "value": "us-gaap:FairValueInputsLevel2Member"
+          },
+          {
+            "dimension": "us-gaap:FinancialInstrumentAxis",
+            "value": "us-gaap:BankTimeDepositsMember"
+          }
+        ],
+        "value": "4043000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2020-09-26"
+        },
+        "segment": [
+          {
+            "dimension": "us-gaap:FairValueByFairValueHierarchyLevelAxis",
+            "value": "us-gaap:FairValueInputsLevel2Member"
+          },
+          {
+            "dimension": "us-gaap:FinancialInstrumentAxis",
+            "value": "us-gaap:CommercialPaperMember"
+          }
+        ],
+        "value": "3185000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2020-09-26"
+        },
+        "segment": [
+          {
+            "dimension": "us-gaap:FairValueByFairValueHierarchyLevelAxis",
+            "value": "us-gaap:FairValueInputsLevel2Member"
+          },
+          {
+            "dimension": "us-gaap:FinancialInstrumentAxis",
+            "value": "us-gaap:CorporateDebtSecuritiesMember"
+          }
+        ],
+        "value": "0"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2020-09-26"
+        },
+        "segment": [
+          {
+            "dimension": "us-gaap:FairValueByFairValueHierarchyLevelAxis",
+            "value": "us-gaap:FairValueInputsLevel2Member"
+          },
+          {
+            "dimension": "us-gaap:FinancialInstrumentAxis",
+            "value": "us-gaap:USStatesAndPoliticalSubdivisionsMember"
+          }
+        ],
+        "value": "0"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2020-09-26"
+        },
+        "segment": [
+          {
+            "dimension": "us-gaap:FairValueByFairValueHierarchyLevelAxis",
+            "value": "us-gaap:FairValueInputsLevel2Member"
+          },
+          {
+            "dimension": "us-gaap:FinancialInstrumentAxis",
+            "value": "us-gaap:AssetBackedSecuritiesMember"
+          }
+        ],
+        "value": "0"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "us-gaap:FairValueByFairValueHierarchyLevelAxis",
+          "value": "us-gaap:FairValueInputsLevel2Member"
+        },
+        "value": "18072000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2019-09-28"
+        },
+        "segment": {
+          "dimension": "us-gaap:FinancialInstrumentAxis",
+          "value": "us-gaap:CashMember"
+        },
+        "value": "12204000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2019-09-28"
+        },
+        "segment": [
+          {
+            "dimension": "us-gaap:FairValueByFairValueHierarchyLevelAxis",
+            "value": "us-gaap:FairValueInputsLevel1Member"
+          },
+          {
+            "dimension": "us-gaap:FinancialInstrumentAxis",
+            "value": "us-gaap:MoneyMarketFundsMember"
+          }
+        ],
+        "value": "15897000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2019-09-28"
+        },
+        "segment": {
+          "dimension": "us-gaap:FairValueByFairValueHierarchyLevelAxis",
+          "value": "us-gaap:FairValueInputsLevel1Member"
+        },
+        "value": "15897000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2019-09-28"
+        },
+        "segment": [
+          {
+            "dimension": "us-gaap:FairValueByFairValueHierarchyLevelAxis",
+            "value": "us-gaap:FairValueInputsLevel2Member"
+          },
+          {
+            "dimension": "us-gaap:FinancialInstrumentAxis",
+            "value": "us-gaap:USTreasurySecuritiesMember"
+          }
+        ],
+        "value": "6165000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2019-09-28"
+        },
+        "segment": [
+          {
+            "dimension": "us-gaap:FairValueByFairValueHierarchyLevelAxis",
+            "value": "us-gaap:FairValueInputsLevel2Member"
+          },
+          {
+            "dimension": "us-gaap:FinancialInstrumentAxis",
+            "value": "us-gaap:USGovernmentAgenciesDebtSecuritiesMember"
+          }
+        ],
+        "value": "6489000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2019-09-28"
+        },
+        "segment": [
+          {
+            "dimension": "us-gaap:FairValueByFairValueHierarchyLevelAxis",
+            "value": "us-gaap:FairValueInputsLevel2Member"
+          },
+          {
+            "dimension": "us-gaap:FinancialInstrumentAxis",
+            "value": "us-gaap:ForeignGovernmentDebtSecuritiesMember"
+          }
+        ],
+        "value": "749000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2019-09-28"
+        },
+        "segment": [
+          {
+            "dimension": "us-gaap:FairValueByFairValueHierarchyLevelAxis",
+            "value": "us-gaap:FairValueInputsLevel2Member"
+          },
+          {
+            "dimension": "us-gaap:FinancialInstrumentAxis",
+            "value": "us-gaap:BankTimeDepositsMember"
+          }
+        ],
+        "value": "2024000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2019-09-28"
+        },
+        "segment": [
+          {
+            "dimension": "us-gaap:FairValueByFairValueHierarchyLevelAxis",
+            "value": "us-gaap:FairValueInputsLevel2Member"
+          },
+          {
+            "dimension": "us-gaap:FinancialInstrumentAxis",
+            "value": "us-gaap:CommercialPaperMember"
+          }
+        ],
+        "value": "5193000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2019-09-28"
+        },
+        "segment": [
+          {
+            "dimension": "us-gaap:FairValueByFairValueHierarchyLevelAxis",
+            "value": "us-gaap:FairValueInputsLevel2Member"
+          },
+          {
+            "dimension": "us-gaap:FinancialInstrumentAxis",
+            "value": "us-gaap:CorporateDebtSecuritiesMember"
+          }
+        ],
+        "value": "123000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2019-09-28"
+        },
+        "segment": [
+          {
+            "dimension": "us-gaap:FairValueByFairValueHierarchyLevelAxis",
+            "value": "us-gaap:FairValueInputsLevel2Member"
+          },
+          {
+            "dimension": "us-gaap:FinancialInstrumentAxis",
+            "value": "us-gaap:USStatesAndPoliticalSubdivisionsMember"
+          }
+        ],
+        "value": "0"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2019-09-28"
+        },
+        "segment": [
+          {
+            "dimension": "us-gaap:FairValueByFairValueHierarchyLevelAxis",
+            "value": "us-gaap:FairValueInputsLevel2Member"
+          },
+          {
+            "dimension": "us-gaap:FinancialInstrumentAxis",
+            "value": "us-gaap:AssetBackedSecuritiesMember"
+          }
+        ],
+        "value": "0"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "instant": "2019-09-28"
+        },
+        "segment": {
+          "dimension": "us-gaap:FairValueByFairValueHierarchyLevelAxis",
+          "value": "us-gaap:FairValueInputsLevel2Member"
+        },
+        "value": "20743000000"
+      }
+    ],
+    "MarketableSecuritiesCurrent": [ "..." ],
+    "AccountsReceivableNetCurrent": [ "..." ],
+    "InventoryNet": [ "..." ],
+    "NontradeReceivablesCurrent": [ "..." ],
+    "OtherAssetsCurrent": [ "..." ],
+    "AssetsCurrent": [ "..." ],
+    "MarketableSecuritiesNoncurrent": [ "..." ],
+    "PropertyPlantAndEquipmentNet": [ "..." ],
+    "OtherAssetsNoncurrent": [ "..." ],
+    "AssetsNoncurrent": [ "..." ],
+    "Assets": [ "..." ],
+    "AccountsPayableCurrent": [ "..." ],
+    "OtherLiabilitiesCurrent": [ "..." ],
+    "ContractWithCustomerLiabilityCurrent": [ "..." ],
+    "CommercialPaper": [ "..." ],
+    "LongTermDebtCurrent": [ "..." ],
+    "LiabilitiesCurrent": [ "..." ],
+    "LongTermDebtNoncurrent": [ "..." ],
+    "OtherLiabilitiesNoncurrent": [ "..." ],
+    "LiabilitiesNoncurrent": [ "..." ],
+    "Liabilities": [ "..." ],
+    "CommitmentsAndContingencies": [ "..." ],
+    "CommonStocksIncludingAdditionalPaidInCapital": [ "..." ],
+    "RetainedEarningsAccumulatedDeficit": [ "..." ],
+    "AccumulatedOtherComprehensiveIncomeLossNetOfTax": [ "..." ],
+    "StockholdersEquity": [ "..." ],
+    "LiabilitiesAndStockholdersEquity": [ "..." ]
+  }
+}
+Response Example
+The example shows the JSON version of Apple's 10-K XBRL filing filed on 29/10/2020 (shortened version):
+https://www.sec.gov/Archives/edgar/data/320193/000032019320000096/aapl-20200926.htm
+
+JSON
+{
+  "CoverPage": {
+    "DocumentType": "10-K",
+    "DocumentAnnualReport": "true",
+    "DocumentPeriodEndDate": "2020-09-26",
+    "DocumentTransitionReport": "false",
+    "EntityFileNumber": "001-36743",
+    "EntityRegistrantName": "Apple Inc.",
+    "EntityIncorporationStateCountryCode": "CA",
+    "EntityTaxIdentificationNumber": "94-2404110",
+    "EntityAddressAddressLine1": "One Apple Park Way",
+    "EntityAddressCityOrTown": "Cupertino",
+    "EntityAddressStateOrProvince": "CA",
+    "EntityAddressPostalZipCode": "95014",
+    "CityAreaCode": "408",
+    "LocalPhoneNumber": "996-1010",
+    "Security12bTitle": [
+      {
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "us-gaap:StatementClassOfStockAxis",
+          "value": "us-gaap:CommonStockMember"
+        },
+        "value": "Common Stock, $0.00001 par value per share"
+      },
+      {
+        "...": "... more items"
+      }
+    ],
+    "TradingSymbol": {
+      "period": {
+        "startDate": "2019-09-29",
+        "endDate": "2020-09-26"
+      },
+      "segment": {
+        "dimension": "us-gaap:StatementClassOfStockAxis",
+        "value": "us-gaap:CommonStockMember"
+      },
+      "value": "AAPL"
+    },
+    "NoTradingSymbolFlag": [
+      {
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "us-gaap:StatementClassOfStockAxis",
+          "value": "aapl:A1.000NotesDue2022Member"
+        },
+        "value": "true"
+      },
+      {
+        "...": "... more items"
+      }
+    ],
+    "SecurityExchangeName": [
+      {
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "us-gaap:StatementClassOfStockAxis",
+          "value": "us-gaap:CommonStockMember"
+        },
+        "value": "NASDAQ"
+      },
+      {
+        "...": "... more items"
+      }
+    ],
+    "EntityWellKnownSeasonedIssuer": "Yes",
+    "EntityVoluntaryFilers": "No",
+    "EntityCurrentReportingStatus": "Yes",
+    "EntityInteractiveDataCurrent": "Yes",
+    "EntityFilerCategory": "Large Accelerated Filer",
+    "EntitySmallBusiness": "false",
+    "EntityEmergingGrowthCompany": "false",
+    "IcfrAuditorAttestationFlag": "true",
+    "EntityShellCompany": "false",
+    "EntityPublicFloat": {
+      "decimals": "-6",
+      "unitRef": "usd",
+      "period": {
+        "instant": "2020-03-27"
+      },
+      "value": "1070633000000"
+    },
+    "EntityCommonStockSharesOutstanding": {
+      "decimals": "-3",
+      "unitRef": "shares",
+      "period": {
+        "instant": "2020-10-16"
+      },
+      "value": "17001802000"
+    },
+    "AmendmentFlag": "false",
+    "DocumentFiscalYearFocus": "2020",
+    "DocumentFiscalPeriodFocus": "FY",
+    "EntityCentralIndexKey": "0000320193",
+    "CurrentFiscalYearEndDate": "--09-26"
+  },
+  "StatementsOfIncome": {
+    "RevenueFromContractWithCustomerExcludingAssessedTax": [
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2019-09-29",
+          "endDate": "2020-09-26"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "us-gaap:ProductMember"
+        },
+        "value": "220747000000"
+      },
+      {
+        "decimals": "-6",
+        "unitRef": "usd",
+        "period": {
+          "startDate": "2018-09-30",
+          "endDate": "2019-09-28"
+        },
+        "segment": {
+          "dimension": "srt:ProductOrServiceAxis",
+          "value": "us-gaap:ProductMember"
+        },
+        "value": "213883000000"
+      },
+      "... more items"
+    ],
+    "CostOfGoodsAndServicesSold": [ "..." ],
+    "GrossProfit": [ "..." ],
+    "ResearchAndDevelopmentExpense": [ "..." ],
+    "SellingGeneralAndAdministrativeExpense": [ "..." ],
+    "OperatingExpenses": [ "..." ],
+    "OperatingIncomeLoss": [ "..." ],
+    "NonoperatingIncomeExpense": [ "..." ],
+    "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest": [ "..." ],
+    "IncomeTaxExpenseBenefit": [ "..." ],
+    "NetIncomeLoss": [ "..." ],
+    "EarningsPerShareBasic": [ "..." ],
+    "EarningsPerShareDiluted": [ "..." ],
+    "WeightedAverageNumberOfSharesOutstandingBasic": [ "..." ],
+    "WeightedAverageNumberOfDilutedSharesOutstanding": [ "..." ]
+  },
+  "StatementsOfComprehensiveIncome": {
+    "NetIncomeLoss": [ "..." ],
+    "OtherComprehensiveIncomeLossForeignCurrencyTransactionAndTranslationAdjustmentNetOfTax": [ "..." ],
+    "OtherComprehensiveIncomeLossDerivativeInstrumentGainLossbeforeReclassificationafterTax": {
+      "decimals": "-6",
+      "unitRef": "usd",
+      "period": {
+        "startDate": "2019-09-29",
+        "endDate": "2020-09-26"
+      },
+      "value": "79000000"
+    },
+    "OtherComprehensiveIncomeUnrealizedGainLossOnDerivativesArisingDuringPeriodNetOfTax": [ "..." ],
+    "OtherComprehensiveIncomeLossCashFlowHedgeGainLossReclassificationAfterTax": { "...": "..." },
+    "OtherComprehensiveIncomeLossReclassificationAdjustmentFromAOCIOnDerivativesNetOfTax": [ "..." ],
+    "OtherComprehensiveIncomeLossDerivativeInstrumentGainLossafterReclassificationandTax": { "...": "..." },
+    "OtherComprehensiveIncomeLossDerivativesQualifyingAsHedgesNetOfTax": [ "..." ],
+    "OtherComprehensiveIncomeUnrealizedHoldingGainLossOnSecuritiesArisingDuringPeriodNetOfTax": [ "..." ],
+    "OtherComprehensiveIncomeLossReclassificationAdjustmentFromAOCIForSaleOfSecuritiesNetOfTax": [ "..." ],
+    "OtherComprehensiveIncomeLossAvailableForSaleSecuritiesAdjustmentNetOfTax": [ "..." ],
+    "OtherComprehensiveIncomeLossNetOfTaxPortionAttributableToParent": [ "..." ],
+    "ComprehensiveIncomeNetOfTax": [ "..." ]
+  },
+  "BalanceSheets": {
+    "CashAndCashEquivalentsAtCarryingValue": [ "..." ],
+    "MarketableSecuritiesCurrent": [ "..." ],
+    "AccountsReceivableNetCurrent": [ "..." ],
+    "InventoryNet": [ "..." ],
+    "NontradeReceivablesCurrent": [ "..." ],
+    "OtherAssetsCurrent": [ "..." ],
+    "AssetsCurrent": [ "..." ],
+    "MarketableSecuritiesNoncurrent": [ "..." ],
+    "PropertyPlantAndEquipmentNet": [ "..." ],
+    "OtherAssetsNoncurrent": [ "..." ],
+    "AssetsNoncurrent": [ "..." ],
+    "Assets": [ "..." ],
+    "AccountsPayableCurrent": [ "..." ],
+    "OtherLiabilitiesCurrent": [ "..." ],
+    "ContractWithCustomerLiabilityCurrent": [ "..." ],
+    "CommercialPaper": [ "..." ],
+    "LongTermDebtCurrent": [ "..." ],
+    "LiabilitiesCurrent": [ "..." ],
+    "LongTermDebtNoncurrent": [ "..." ],
+    "OtherLiabilitiesNoncurrent": [ "..." ],
+    "LiabilitiesNoncurrent": [ "..." ],
+    "Liabilities": [ "..." ],
+    "CommitmentsAndContingencies": [ "..." ],
+    "CommonStocksIncludingAdditionalPaidInCapital": [ "..." ],
+    "RetainedEarningsAccumulatedDeficit": [ "..." ],
+    "AccumulatedOtherComprehensiveIncomeLossNetOfTax": [ "..." ],
+    "StockholdersEquity": [ "..." ],
+    "LiabilitiesAndStockholdersEquity": [ "..." ]
+  },
+  "BalanceSheetsParenthetical": {
+    "CommonStockParOrStatedValuePerShare": [ "..." ],
+    "CommonStockSharesAuthorized": [ "..." ],
+    "CommonStockSharesIssued": [ "..." ],
+    "CommonStockSharesOutstanding": [ "..." ]
+  },
+  "StatementsOfShareholdersEquity": {
+    "StockholdersEquity": [ "..." ],
+    "StockIssuedDuringPeriodValueNewIssues": [ "..." ],
+    "AdjustmentsRelatedToTaxWithholdingForShareBasedCompensation": [ "..." ],
+    "AdjustmentsToAdditionalPaidInCapitalSharebasedCompensationRequisiteServicePeriodRecognitionValue": [ "..." ],
+    "NetIncomeLoss": [ "..." ],
+    "Dividends": [ "..." ],
+    "StockRepurchasedAndRetiredDuringPeriodValue": [ "..." ],
+    "OtherComprehensiveIncomeLossNetOfTaxPortionAttributableToParent": [ "..." ],
+    "CommonStockDividendsPerShareDeclared": [ "..." ]
+  },
+  "StatementsOfCashFlows": {
+    "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents": [ "..." ],
+    "NetIncomeLoss": [ "..." ],
+    "DepreciationDepletionAndAmortization": [ "..." ],
+    "ShareBasedCompensation": [ "..." ],
+    "DeferredIncomeTaxExpenseBenefit": [ "..." ],
+    "OtherNoncashIncomeExpense": [ "..." ],
+    "IncreaseDecreaseInAccountsReceivable": [ "..." ],
+    "IncreaseDecreaseInInventories": [ "..." ],
+    "IncreaseDecreaseInOtherReceivables": [ "..." ],
+    "IncreaseDecreaseInOtherOperatingAssets": [ "..." ],
+    "IncreaseDecreaseInAccountsPayable": [ "..." ],
+    "IncreaseDecreaseInContractWithCustomerLiability": [ "..." ],
+    "IncreaseDecreaseInOtherOperatingLiabilities": [ "..." ],
+    "NetCashProvidedByUsedInOperatingActivities": [ "..." ],
+    "PaymentsToAcquireAvailableForSaleSecuritiesDebt": [ "..." ],
+    "ProceedsFromMaturitiesPrepaymentsAndCallsOfAvailableForSaleSecurities": [ "..." ],
+    "ProceedsFromSaleOfAvailableForSaleSecuritiesDebt": [ "..." ],
+    "PaymentsToAcquirePropertyPlantAndEquipment": [ "..." ],
+    "PaymentsToAcquireBusinessesNetOfCashAcquired": [ "..." ],
+    "PaymentsToAcquireOtherInvestments": [ "..." ],
+    "ProceedsFromSaleAndMaturityOfOtherInvestments": [ "..." ],
+    "PaymentsForProceedsFromOtherInvestingActivities": [ "..." ],
+    "NetCashProvidedByUsedInInvestingActivities": [ "..." ],
+    "ProceedsFromIssuanceOfCommonStock": [ "..." ],
+    "PaymentsRelatedToTaxWithholdingForShareBasedCompensation": [ "..." ],
+    "PaymentsOfDividends": [ "..." ],
+    "PaymentsForRepurchaseOfCommonStock": [ "..." ],
+    "ProceedsFromIssuanceOfLongTermDebt": [ "..." ],
+    "RepaymentsOfLongTermDebt": [ "..." ],
+    "ProceedsFromRepaymentsOfCommercialPaper": [ "..." ],
+    "ProceedsFromPaymentsForOtherFinancingActivities": [ "..." ],
+    "NetCashProvidedByUsedInFinancingActivities": [ "..." ],
+    "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect": [ "..." ],
+    "IncomeTaxesPaidNet": [ "..." ],
+    "InterestPaidNet": [ "..." ]
+  },
+  "SummaryofSignificantAccountingPolicies": {
+    "BasisOfPresentationAndSignificantAccountingPoliciesTextBlock": "Summary of Significant Accounting Policies<div style=\"margin-top:9pt;text-align:justify\"><span style"
+  },
+  "SummaryofSignificantAccountingPoliciesPolicies": {
+    "BasisOfAccountingPolicyPolicyTextBlock": "...",
+    "FiscalPeriod": "...",
+    "StockSplitPolicyPolicyTextBlock": "...",
+    "NewAccountingPronouncementsPolicyPolicyTextBlock": "...",
+    "AdvertisingCostsPolicyTextBlock": "...",
+    "CompensationRelatedCostsPolicyTextBlock": "...",
+    "EarningsPerSharePolicyTextBlock": "...",
+    "CashAndCashEquivalentsPolicyTextBlock": "...",
+    "InventoryPolicyTextBlock": "...",
+    "PropertyPlantAndEquipmentPolicyTextBlock": "...",
+    "EquitySecuritiesWithoutReadilyDeterminableFairValuePolicyTextBlock": "...",
+    "RestrictedCashandRestrictedMarketableSecuritiesPolicyTextBlock": "...",
+    "FairValueMeasurementPolicyPolicyTextBlock": "...",
+    "RevenueRecognitionPolicyTextBlock": "...",
+    "DerivativesPolicyTextBlock": "...",
+    "IncomeTaxPolicyTextBlock": "...",
+    "SegmentReportingPolicyPolicyTextBlock": "...",
+    "LesseeLeasesPolicyTextBlock": "..."
+  },
+  "SummaryofSignificantAccountingPoliciesTables": {
+    "ScheduleOfEarningsPerShareBasicAndDilutedTableTextBlock": "..."
+  },
+  "SummaryofSignificantAccountingPoliciesAdditionalInformationDetails": {
+    "StockholdersEquityNoteStockSplitConversionRatio1": { "...": "..." },
+    "OperatingandFinanceLeaseRightofUseAsset": [ "..." ],
+    "OperatingandFinanceLeaseLiability": [ "..." ],
+    "StockholdersEquity": [ "..." ],
+    "AntidilutiveSecuritiesExcludedFromComputationOfEarningsPerShareAmount": { "...": "..." },
+    "PropertyPlantAndEquipmentUsefulLife": [ "..." ],
+    "Depreciation": [ "..." ],
+    "NonCashActivitiesInvolvingPropertyPlantandEquipmentNetIncreaseDecreasetoAccountsPayableandOtherCurrentLiabilities": [ "..." ]
+  },
+  "SummaryofSignificantAccountingPoliciesComputationofBasicandDilutedEarningsPerShareDetails": {
+    "NetIncomeLoss": [ "..." ],
+    "WeightedAverageNumberOfSharesOutstandingBasic": [ "..." ],
+    "WeightedAverageNumberDilutedSharesOutstandingAdjustment": [ "..." ],
+    "WeightedAverageNumberOfDilutedSharesOutstanding": [ "..." ],
+    "EarningsPerShareBasic": [ "..." ],
+    "EarningsPerShareDiluted": [ "..." ]
+  },
+  "RevenueRecognition": {
+    "RevenueFromContractWithCustomerTextBlock": "..."
+  },
+  "RevenueRecognitionTables": {
+    "DisaggregationOfRevenueTableTextBlock": "..."
+  },
+  "RevenueRecognitionAdditionalInformationDetails": {
+    "PerformanceObligationsinArrangements": { "...": "..." },
+    "ContractWithCustomerLiability": [ "..." ]
+  },
+  "RevenueRecognitionDeferredRevenueExpectedTimingofRealizationDetails": {
+    "RevenueRemainingPerformanceObligationPercentage": [ "..." ],
+    "RevenueRemainingPerformanceObligationExpectedTimingOfSatisfactionPeriod1": [ "..." ]
+  },
+  "RevenueRecognitionNetSalesDisaggregatedbySignificantProductsandServicesDetails": {
+    "RevenueFromContractWithCustomerExcludingAssessedTax": [ "..." ],
+    "ContractWithCustomerLiabilityRevenueRecognized": [ "..." ]
+  },
+  "FinancialInstruments": {
+    "FinancialInstrumentsDisclosureTextBlock": "..."
+  },
+  "FinancialInstrumentsTables": {
+    "ScheduleOfCashCashEquivalentsAndShortTermInvestmentsTableTextBlock": "...",
+    "ScheduleOfRestrictedCashAndCashEquivalentsTextBlock": "...",
+    "ScheduleOfDerivativeInstrumentsInStatementOfFinancialPositionFairValueTextBlock": "...",
+    "ScheduleOfDerivativeInstrumentsGainLossInStatementOfFinancialPerformanceTextBlock": "...",
+    "ScheduleOfFairValueHedgingInstrumentsStatementsOfFinancialPerformanceAndFinancialPositionLocationTableTextBlock": "...",
+    "NotionalAndCreditRiskAmountsOfOutstandingDerivativePositionsDisclosureTableTextBlock": "..."
+  },
+  "FinancialInstrumentsCashCashEquivalentsandMarketableSecuritiesDetails": {
+    "AvailableForSaleDebtSecuritiesAmortizedCostBasis": [ "..." ],
+    "AvailableForSaleDebtSecuritiesAccumulatedGrossUnrealizedGainBeforeTax": [ "..." ],
+    "AvailableForSaleDebtSecuritiesAccumulatedGrossUnrealizedLossBeforeTax": [ "..." ],
+    "AvailableForSaleSecuritiesDebtSecurities": [ "..." ],
+    "CashAndCashEquivalentsAtCarryingValue": [ "..." ],
+    "MarketableSecuritiesCurrent": [ "..." ],
+    "MarketableSecuritiesNoncurrent": [ "..." ],
+    "RestrictedInvestments": [ "..." ]
+  },
+  "...": "... more items"
+}
+
+
+References
+XBRL Glossary of Terms
+Inline XBRL
+XBRL Validation and Rendering
+Interactive Data Public Test Suite
+Regulations
+PART 232 - REGULATION S-T - GENERAL RULES AND REGULATIONS FOR ELECTRONIC FILINGS
+§ 229.601 (Item 601) Exhibits.
+§ 229.402 (Item 402) Executive compensation.
+§ 230.485 Effective date of post-effective amendments filed by certain registered investment companies.
+§ 232.405 Interactive Data File submissions.
+§ 232.406 Cover Page XBRL Data Tagging.
+§ 240.17g-7 Disclosure requirements.
+§ 240.14a-101 Schedule 14A. Information required in proxy statement.
+§ 240.14c-101 Schedule 14C. Information required in information statement.
+
+Extract XBRL Data From SEC Filings With Python
+The following examples show you how to access, extract, parse and convert XBRL data from SEC filings with the XBRL to JSON converter in Python.
+
+On this page:
+Quick start
+Convert XBRL to JSON by providing the URL of an SEC filing
+Convert XBRL data into a pandas DataFrame
+Extract an income statement from XBRL data and convert it to a pandas DataFrame
+Extract an income statement from an SEC filing and export it to Excel
+Extract a balance sheet from XBRL data and convert it to a pandas DataFrame
+Extract the address of a company from its SEC filing
+Quick Start
+The following tutorial illustrates how to access and extract XBRL data from SEC filings using Python and our XBRL-to-JSON Converter API.
+
+Overview: XBRL Converter in Python
+Open In Colab   Download Notebook
+
+The following example provides a quick overview on how to extract XBRL data from SEC filings and convert XBRL data to JSON.
+
+!pip -q install sec-api
+from sec_api import XbrlApi
+
+xbrlApi = XbrlApi("YOUR_API_KEY")
+
+# 10-K HTM File URL example
+htm_url="https://www.sec.gov/Archives/edgar/data/320193/000032019320000096/aapl-20200926.htm"
+xbrl_json = xbrlApi.xbrl_to_json(htm_url=htm_url)
+
+# access income statement, balance sheet and cash flow statement
+print(xbrl_json["StatementsOfIncome"])
+print(xbrl_json["BalanceSheets"])
+print(xbrl_json["StatementsOfCashFlows"])
+
+# 10-K XBRL File URL example
+xbrl_url="https://www.sec.gov/Archives/edgar/data/1318605/000156459021004599/tsla-10k_20201231_htm.xml"
+xbrl_json = xbrlApi.xbrl_to_json(xbrl_url=xbrl_url)
+
+# 10-K accession number example
+accession_no="0001564590-21-004599"
+xbrl_json = xbrlApi.xbrl_to_json(accession_no=accession_no)
+The XbrlApi interface provides a .xbrl_to_json() method to convert XBRL data of an SEC filing into a standardized JSON object. The XBRL-JSON output can be converted into a pandas DataFrame, exported to a CSV or Excel file, and more.
+
+The API fetches all XML-XBRL data, merges the relevant files, such as calculation, schema and instance document, and returns a single, standardized JSON output.
+
+Method parameters:
+
+htm_url (string) - The URL of the filing from which XBRL data should be extracted and converted. Example: https://www.sec.gov/Archives/edgar/data/320193/000032019320000096/aapl-20200926.htm
+xbrl_url (string) - The URL of any XML file containing XBRL information. This can be the XBRL instance document, XBRL schema file (.xsd), XBRL calculation file, XBRL definition file, XBRL label file or the XBRL presentation file of a filing.
+accession_no (string) - The accession number of the filing from which XBRL data should be extracted and converted.
+Only one parameter needs to be set. For example, if you generated a local list of accession numbers, simply call .xbrl_to_json(accession_no=...) for each accession number to access the complete XBRL data in Python.
+
+The XBRL-to-JSON Converter supports all SEC form types. Refer to the section "Supported XBRL Filing Types" on the overview page to find a complete list of supported SEC form types.
+
+A full tutorial on how to generate multi-year financial statements from 10-K and 10-Q XBRL data is available here.
+
+Convert XBRL to JSON with Python by providing the URL of an SEC filing
+Accessing the income statements, balance sheets and cash flow statements of annual and quarterly reports disclosed in 10-K, 40-F, 10-Q and 20-F SEC filings, respectively, is as simple as calling three lines of Python code.
+
+The below table shows the mapping between the financial statements and their corresponding keys in the XBRL-JSON output.
+
+Financial Statement	XBRL-JSON Key
+Income statement	xbrl_json["StatementsOfIncome"]
+Balance sheet	xbrl_json["BalanceSheets"]
+Cash flow statement	xbrl_json["StatementsOfCashFlows"]
+Let's start with looking at all available keys of the converted XBRL object while using one of Apple's 10-K filings as an example.
+
+# 10-K HTM File URL example
+htm_url = "https://www.sec.gov/Archives/edgar/data/320193/000032019320000096/aapl-20200926.htm"
+xbrl_json = xbrlApi.xbrl_to_json(htm_url=htm_url)
+
+print("Keys of the XBRL-JSON dictionary of Apple's 10-K filing")
+print('---------------------------------')
+print(*list(xbrl_json.keys()), sep='\n')
+Keys of the XBRL-JSON dictionary of Apple's 10-K filing
+---------------------------------
+CoverPage
+StatementsOfIncome
+StatementsOfComprehensiveIncome
+BalanceSheets
+BalanceSheetsParenthetical
+StatementsOfShareholdersEquity
+StatementsOfCashFlows
+SummaryofSignificantAccountingPolicies
+SummaryofSignificantAccountingPoliciesPolicies
+SummaryofSignificantAccountingPoliciesTables
+SummaryofSignificantAccountingPoliciesAdditionalInformationDetails
+SummaryofSignificantAccountingPoliciesComputationofBasicandDilutedEarningsPerShareDetails
+RevenueRecognition
+RevenueRecognitionTables
+RevenueRecognitionAdditionalInformationDetails
+RevenueRecognitionDeferredRevenueExpectedTimingofRealizationDetails
+RevenueRecognitionNetSalesDisaggregatedbySignificantProductsandServicesDetails
+FinancialInstruments
+FinancialInstrumentsTables
+FinancialInstrumentsCashCashEquivalentsandMarketableSecuritiesDetails
+FinancialInstrumentsAdditionalInformationDetails
+FinancialInstrumentsRestrictedCashDetails
+FinancialInstrumentsDerivativeInstrumentsatGrossFairValueDetails
+FinancialInstrumentsPreTaxGainsandLossesofDerivativeandNonDerivativeInstrumentsDesignatedasCashFlowandNetInvestmentHedgesDetails
+FinancialInstrumentsDerivativeInstrumentsDesignatedasFairValueHedgesandRelatedHedgedItemsDetails
+FinancialInstrumentsNotionalAmountsandCreditRiskAmountsAssociatedwithDerivativeInstrumentsDetails
+ConsolidatedFinancialStatementDetails
+ConsolidatedFinancialStatementDetailsTables
+ConsolidatedFinancialStatementDetailsPropertyPlantandEquipmentNetDetails
+ConsolidatedFinancialStatementDetailsOtherNonCurrentLiabilitiesDetails
+ConsolidatedFinancialStatementDetailsOtherIncomeExpenseNetDetails
+IncomeTaxes
+IncomeTaxesTables
+IncomeTaxesProvisionforIncomeTaxesDetails
+IncomeTaxesAdditionalInformationDetails
+IncomeTaxesReconciliationoftheProvisionforIncomeTaxesDetails
+IncomeTaxesSignificantComponentsofDeferredTaxAssetsandLiabilitiesDetails
+IncomeTaxesAggregateChangesinGrossUnrecognizedTaxBenefitsDetails
+Debt
+DebtTables
+DebtAdditionalInformationDetails
+DebtSummaryofCashFlowsAssociatedwithCommercialPaperDetails
+DebtSummaryofTermDebtDetails
+DebtFuturePrincipalPaymentsforTermDebtDetails
+ShareholdersEquity
+ShareholdersEquityTables
+ShareholdersEquityAdditionalInformationDetails
+ShareholdersEquitySharesofCommonStockDetails
+ComprehensiveIncome
+ComprehensiveIncomeTables
+ComprehensiveIncomePretaxAmountsReclassifiedfromAOCIintotheConsolidatedStatementsofOperationsDetails
+ComprehensiveIncomeChangeinAOCIbyComponentDetails
+BenefitPlans
+BenefitPlansTables
+BenefitPlansAdditionalInformationDetails
+BenefitPlansRestrictedStockUnitsActivityandRelatedInformationDetails
+BenefitPlansSummaryofShareBasedCompensationExpenseandtheRelatedIncomeTaxBenefitDetails
+CommitmentsandContingencies
+CommitmentsandContingenciesTables
+CommitmentsandContingenciesChangesinAccruedWarrantiesandRelatedCostsDetails
+CommitmentsandContingenciesAdditionalInformationDetails
+CommitmentsandContingenciesFuturePaymentsUnderUnconditionalPurchaseObligationsDetails
+SegmentInformationandGeographicData
+SegmentInformationandGeographicDataTables
+SegmentInformationandGeographicDataSummaryInformationbyReportableSegmentDetails
+SegmentInformationandGeographicDataReconciliationofSegmentOperatingIncometotheConsolidatedStatementsofOperationsDetails
+SegmentInformationandGeographicDataNetSalesDetails
+SegmentInformationandGeographicDataLongLivedAssetsDetails
+Leases
+LeasesTables
+LeasesAdditionalInformationDetails
+LeasesROUAssetsandLeaseLiabilitiesDetails
+LeasesLeaseLiabilityMaturitiesDetails
+SelectedQuarterlyFinancialInformationUnaudited
+SelectedQuarterlyFinancialInformationUnauditedTables
+SelectedQuarterlyFinancialInformationUnauditedSummaryofQuarterlyFinancialInformationDetails
+We continue with listing all US GAAP items of the income statement in xbrl_json["StatementsOfIncome"].
+
+print("Keys of income statement in XBRL")
+print('---------------------------------')
+print(*list(xbrl_json["StatementsOfIncome"].keys()), sep='\n')
+Keys of income statement in XBRL
+---------------------------------
+RevenueFromContractWithCustomerExcludingAssessedTax
+CostOfGoodsAndServicesSold
+GrossProfit
+ResearchAndDevelopmentExpense
+SellingGeneralAndAdministrativeExpense
+OperatingExpenses
+OperatingIncomeLoss
+NonoperatingIncomeExpense
+IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest
+IncomeTaxExpenseBenefit
+NetIncomeLoss
+EarningsPerShareBasic
+EarningsPerShareDiluted
+WeightedAverageNumberOfSharesOutstandingBasic
+WeightedAverageNumberOfDilutedSharesOutstanding
+Now let's inspect the content of the revenue item of the income statement.
+
+print("Revenue items of income statement in XBRL")
+print('---------------------------------')
+print(*list(xbrl_json["StatementsOfIncome"]["RevenueFromContractWithCustomerExcludingAssessedTax"]), sep='\n')
+Keys of income statement in XBRL
+---------------------------------
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2019-09-29', 'endDate': '2020-09-26'}, 'segment': {'dimension': 'srt:ProductOrServiceAxis', 'value': 'us-gaap:ProductMember'}, 'value': '220747000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2018-09-30', 'endDate': '2019-09-28'}, 'segment': {'dimension': 'srt:ProductOrServiceAxis', 'value': 'us-gaap:ProductMember'}, 'value': '213883000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2017-10-01', 'endDate': '2018-09-29'}, 'segment': {'dimension': 'srt:ProductOrServiceAxis', 'value': 'us-gaap:ProductMember'}, 'value': '225847000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2019-09-29', 'endDate': '2020-09-26'}, 'segment': {'dimension': 'srt:ProductOrServiceAxis', 'value': 'us-gaap:ServiceMember'}, 'value': '53768000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2018-09-30', 'endDate': '2019-09-28'}, 'segment': {'dimension': 'srt:ProductOrServiceAxis', 'value': 'us-gaap:ServiceMember'}, 'value': '46291000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2017-10-01', 'endDate': '2018-09-29'}, 'segment': {'dimension': 'srt:ProductOrServiceAxis', 'value': 'us-gaap:ServiceMember'}, 'value': '39748000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2019-09-29', 'endDate': '2020-09-26'}, 'value': '274515000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2018-09-30', 'endDate': '2019-09-28'}, 'value': '260174000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2017-10-01', 'endDate': '2018-09-29'}, 'value': '265595000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2019-09-29', 'endDate': '2020-09-26'}, 'segment': {'dimension': 'srt:ProductOrServiceAxis', 'value': 'aapl:IPhoneMember'}, 'value': '137781000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2018-09-30', 'endDate': '2019-09-28'}, 'segment': {'dimension': 'srt:ProductOrServiceAxis', 'value': 'aapl:IPhoneMember'}, 'value': '142381000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2017-10-01', 'endDate': '2018-09-29'}, 'segment': {'dimension': 'srt:ProductOrServiceAxis', 'value': 'aapl:IPhoneMember'}, 'value': '164888000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2019-09-29', 'endDate': '2020-09-26'}, 'segment': {'dimension': 'srt:ProductOrServiceAxis', 'value': 'aapl:MacMember'}, 'value': '28622000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2018-09-30', 'endDate': '2019-09-28'}, 'segment': {'dimension': 'srt:ProductOrServiceAxis', 'value': 'aapl:MacMember'}, 'value': '25740000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2017-10-01', 'endDate': '2018-09-29'}, 'segment': {'dimension': 'srt:ProductOrServiceAxis', 'value': 'aapl:MacMember'}, 'value': '25198000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2019-09-29', 'endDate': '2020-09-26'}, 'segment': {'dimension': 'srt:ProductOrServiceAxis', 'value': 'aapl:IPadMember'}, 'value': '23724000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2018-09-30', 'endDate': '2019-09-28'}, 'segment': {'dimension': 'srt:ProductOrServiceAxis', 'value': 'aapl:IPadMember'}, 'value': '21280000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2017-10-01', 'endDate': '2018-09-29'}, 'segment': {'dimension': 'srt:ProductOrServiceAxis', 'value': 'aapl:IPadMember'}, 'value': '18380000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2019-09-29', 'endDate': '2020-09-26'}, 'segment': {'dimension': 'srt:ProductOrServiceAxis', 'value': 'aapl:WearablesHomeandAccessoriesMember'}, 'value': '30620000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2018-09-30', 'endDate': '2019-09-28'}, 'segment': {'dimension': 'srt:ProductOrServiceAxis', 'value': 'aapl:WearablesHomeandAccessoriesMember'}, 'value': '24482000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2017-10-01', 'endDate': '2018-09-29'}, 'segment': {'dimension': 'srt:ProductOrServiceAxis', 'value': 'aapl:WearablesHomeandAccessoriesMember'}, 'value': '17381000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2019-09-29', 'endDate': '2020-09-26'}, 'segment': {'dimension': 'us-gaap:StatementBusinessSegmentsAxis', 'value': 'aapl:AmericasSegmentMember'}, 'value': '124556000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2018-09-30', 'endDate': '2019-09-28'}, 'segment': {'dimension': 'us-gaap:StatementBusinessSegmentsAxis', 'value': 'aapl:AmericasSegmentMember'}, 'value': '116914000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2017-10-01', 'endDate': '2018-09-29'}, 'segment': {'dimension': 'us-gaap:StatementBusinessSegmentsAxis', 'value': 'aapl:AmericasSegmentMember'}, 'value': '112093000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2019-09-29', 'endDate': '2020-09-26'}, 'segment': {'dimension': 'us-gaap:StatementBusinessSegmentsAxis', 'value': 'aapl:EuropeSegmentMember'}, 'value': '68640000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2018-09-30', 'endDate': '2019-09-28'}, 'segment': {'dimension': 'us-gaap:StatementBusinessSegmentsAxis', 'value': 'aapl:EuropeSegmentMember'}, 'value': '60288000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2017-10-01', 'endDate': '2018-09-29'}, 'segment': {'dimension': 'us-gaap:StatementBusinessSegmentsAxis', 'value': 'aapl:EuropeSegmentMember'}, 'value': '62420000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2019-09-29', 'endDate': '2020-09-26'}, 'segment': {'dimension': 'us-gaap:StatementBusinessSegmentsAxis', 'value': 'aapl:GreaterChinaSegmentMember'}, 'value': '40308000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2018-09-30', 'endDate': '2019-09-28'}, 'segment': {'dimension': 'us-gaap:StatementBusinessSegmentsAxis', 'value': 'aapl:GreaterChinaSegmentMember'}, 'value': '43678000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2017-10-01', 'endDate': '2018-09-29'}, 'segment': {'dimension': 'us-gaap:StatementBusinessSegmentsAxis', 'value': 'aapl:GreaterChinaSegmentMember'}, 'value': '51942000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2019-09-29', 'endDate': '2020-09-26'}, 'segment': {'dimension': 'us-gaap:StatementBusinessSegmentsAxis', 'value': 'aapl:JapanSegmentMember'}, 'value': '21418000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2018-09-30', 'endDate': '2019-09-28'}, 'segment': {'dimension': 'us-gaap:StatementBusinessSegmentsAxis', 'value': 'aapl:JapanSegmentMember'}, 'value': '21506000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2017-10-01', 'endDate': '2018-09-29'}, 'segment': {'dimension': 'us-gaap:StatementBusinessSegmentsAxis', 'value': 'aapl:JapanSegmentMember'}, 'value': '21733000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2019-09-29', 'endDate': '2020-09-26'}, 'segment': {'dimension': 'us-gaap:StatementBusinessSegmentsAxis', 'value': 'aapl:RestOfAsiaPacificSegmentMember'}, 'value': '19593000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2018-09-30', 'endDate': '2019-09-28'}, 'segment': {'dimension': 'us-gaap:StatementBusinessSegmentsAxis', 'value': 'aapl:RestOfAsiaPacificSegmentMember'}, 'value': '17788000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2017-10-01', 'endDate': '2018-09-29'}, 'segment': {'dimension': 'us-gaap:StatementBusinessSegmentsAxis', 'value': 'aapl:RestOfAsiaPacificSegmentMember'}, 'value': '17407000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2019-09-29', 'endDate': '2020-09-26'}, 'segment': {'dimension': 'srt:StatementGeographicalAxis', 'value': 'country:US'}, 'value': '109197000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2018-09-30', 'endDate': '2019-09-28'}, 'segment': {'dimension': 'srt:StatementGeographicalAxis', 'value': 'country:US'}, 'value': '102266000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2017-10-01', 'endDate': '2018-09-29'}, 'segment': {'dimension': 'srt:StatementGeographicalAxis', 'value': 'country:US'}, 'value': '98061000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2019-09-29', 'endDate': '2020-09-26'}, 'segment': {'dimension': 'srt:StatementGeographicalAxis', 'value': 'country:CN'}, 'value': '40308000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2018-09-30', 'endDate': '2019-09-28'}, 'segment': {'dimension': 'srt:StatementGeographicalAxis', 'value': 'country:CN'}, 'value': '43678000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2017-10-01', 'endDate': '2018-09-29'}, 'segment': {'dimension': 'srt:StatementGeographicalAxis', 'value': 'country:CN'}, 'value': '51942000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2019-09-29', 'endDate': '2020-09-26'}, 'segment': {'dimension': 'srt:StatementGeographicalAxis', 'value': 'aapl:OtherCountriesMember'}, 'value': '125010000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2018-09-30', 'endDate': '2019-09-28'}, 'segment': {'dimension': 'srt:StatementGeographicalAxis', 'value': 'aapl:OtherCountriesMember'}, 'value': '114230000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2017-10-01', 'endDate': '2018-09-29'}, 'segment': {'dimension': 'srt:StatementGeographicalAxis', 'value': 'aapl:OtherCountriesMember'}, 'value': '115592000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2020-06-28', 'endDate': '2020-09-26'}, 'value': '64698000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2020-03-29', 'endDate': '2020-06-27'}, 'value': '59685000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2019-12-29', 'endDate': '2020-03-28'}, 'value': '58313000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2019-09-29', 'endDate': '2019-12-28'}, 'value': '91819000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2019-06-30', 'endDate': '2019-09-28'}, 'value': '64040000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2019-03-31', 'endDate': '2019-06-29'}, 'value': '53809000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2018-12-30', 'endDate': '2019-03-30'}, 'value': '58015000000'}
+{'decimals': '-6', 'unitRef': 'usd', 'period': {'startDate': '2018-09-30', 'endDate': '2018-12-29'}, 'value': '84310000000'}
+Convert XBRL data into a pandas DataFrame
+In the next step, we extract XBRL data from Apple's 10-Q filing and convert it into a pandas DataFrame allowing us to access information such as total revenue per quarter, revenue per product, such as Mac or iPad, and revenue per region, such as America, Europe, Greater China, Japan and more.
+
+aapl_10k = "https://www.sec.gov/Archives/edgar/data/320193/000032019323000006/aapl-20221231.htm"
+aapl_xbrl = xbrlApi.xbrl_to_json(htm_url=aapl_10k)
+import pandas as pd 
+
+revenue = pd.json_normalize(aapl_xbrl["StatementsOfIncome"]["RevenueFromContractWithCustomerExcludingAssessedTax"])
+revenue
+decimals	unitRef	value	period.startDate	period.endDate	segment.dimension	segment.value
+0	-6	usd	96388000000	2022-09-25	2022-12-31	srt:ProductOrServiceAxis	us-gaap:ProductMember
+1	-6	usd	104429000000	2021-09-26	2021-12-25	srt:ProductOrServiceAxis	us-gaap:ProductMember
+2	-6	usd	20766000000	2022-09-25	2022-12-31	srt:ProductOrServiceAxis	us-gaap:ServiceMember
+3	-6	usd	19516000000	2021-09-26	2021-12-25	srt:ProductOrServiceAxis	us-gaap:ServiceMember
+4	-6	usd	117154000000	2022-09-25	2022-12-31	NaN	NaN
+5	-6	usd	123945000000	2021-09-26	2021-12-25	NaN	NaN
+6	-6	usd	65775000000	2022-09-25	2022-12-31	srt:ProductOrServiceAxis	aapl:IPhoneMember
+7	-6	usd	71628000000	2021-09-26	2021-12-25	srt:ProductOrServiceAxis	aapl:IPhoneMember
+8	-6	usd	7735000000	2022-09-25	2022-12-31	srt:ProductOrServiceAxis	aapl:MacMember
+9	-6	usd	10852000000	2021-09-26	2021-12-25	srt:ProductOrServiceAxis	aapl:MacMember
+10	-6	usd	9396000000	2022-09-25	2022-12-31	srt:ProductOrServiceAxis	aapl:IPadMember
+11	-6	usd	7248000000	2021-09-26	2021-12-25	srt:ProductOrServiceAxis	aapl:IPadMember
+12	-6	usd	13482000000	2022-09-25	2022-12-31	srt:ProductOrServiceAxis	aapl:WearablesHomeandAccessoriesMember
+13	-6	usd	14701000000	2021-09-26	2021-12-25	srt:ProductOrServiceAxis	aapl:WearablesHomeandAccessoriesMember
+14	-6	usd	49278000000	2022-09-25	2022-12-31	us-gaap:StatementBusinessSegmentsAxis	aapl:AmericasSegmentMember
+15	-6	usd	51496000000	2021-09-26	2021-12-25	us-gaap:StatementBusinessSegmentsAxis	aapl:AmericasSegmentMember
+16	-6	usd	27681000000	2022-09-25	2022-12-31	us-gaap:StatementBusinessSegmentsAxis	aapl:EuropeSegmentMember
+17	-6	usd	29749000000	2021-09-26	2021-12-25	us-gaap:StatementBusinessSegmentsAxis	aapl:EuropeSegmentMember
+18	-6	usd	23905000000	2022-09-25	2022-12-31	us-gaap:StatementBusinessSegmentsAxis	aapl:GreaterChinaSegmentMember
+19	-6	usd	25783000000	2021-09-26	2021-12-25	us-gaap:StatementBusinessSegmentsAxis	aapl:GreaterChinaSegmentMember
+20	-6	usd	6755000000	2022-09-25	2022-12-31	us-gaap:StatementBusinessSegmentsAxis	aapl:JapanSegmentMember
+21	-6	usd	7107000000	2021-09-26	2021-12-25	us-gaap:StatementBusinessSegmentsAxis	aapl:JapanSegmentMember
+22	-6	usd	9535000000	2022-09-25	2022-12-31	us-gaap:StatementBusinessSegmentsAxis	aapl:RestOfAsiaPacificSegmentMember
+23	-6	usd	9810000000	2021-09-26	2021-12-25	us-gaap:StatementBusinessSegmentsAxis	aapl:RestOfAsiaPacificSegmentMember
+Extract an income statement from XBRL data and convert it to a pandas DataFrame
+The next example shows the function get_income_statement() that extracts the income statement from the XBRL data of the 10-Q SEC filing and converts the statement into a pandas DataFrame.
+
+# convert XBRL-JSON of income statement to pandas dataframe
+def get_income_statement(xbrl_json):
+    income_statement_store = {}
+
+    # iterate over each US GAAP item in the income statement
+    for usGaapItem in xbrl_json['StatementsOfIncome']:
+        values = []
+        indicies = []
+
+        for fact in xbrl_json['StatementsOfIncome'][usGaapItem]:
+            # only consider items without segment. not required for our analysis.
+            if 'segment' not in fact:
+                index = fact['period']['startDate'] + '-' + fact['period']['endDate']
+                # ensure no index duplicates are created
+                if index not in indicies:
+                    values.append(fact['value'])
+                    indicies.append(index)                    
+
+        income_statement_store[usGaapItem] = pd.Series(values, index=indicies) 
+
+    income_statement = pd.DataFrame(income_statement_store)
+    # switch columns and rows so that US GAAP items are rows and each column header represents a date range
+    return income_statement.T 
+
+income_statement = get_income_statement(aapl_xbrl)
+income_statement
+2022-09-25-2022-12-31	2021-09-26-2021-12-25
+RevenueFromContractWithCustomerExcludingAssessedTax	117154000000	123945000000
+CostOfGoodsAndServicesSold	66822000000	69702000000
+GrossProfit	50332000000	54243000000
+ResearchAndDevelopmentExpense	7709000000	6306000000
+SellingGeneralAndAdministrativeExpense	6607000000	6449000000
+OperatingExpenses	14316000000	12755000000
+OperatingIncomeLoss	36016000000	41488000000
+NonoperatingIncomeExpense	-393000000	-247000000
+IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest	35623000000	41241000000
+IncomeTaxExpenseBenefit	5625000000	6611000000
+NetIncomeLoss	29998000000	34630000000
+EarningsPerShareBasic	1.89	2.11
+EarningsPerShareDiluted	1.88	2.10
+WeightedAverageNumberOfSharesOutstandingBasic	15892723000	16391724000
+WeightedAverageNumberOfDilutedSharesOutstanding	15955718000	16519291000
+Extract an income statement from an SEC filing and export it to Excel
+The next example illustrates how to extract the income statement from the XBRL data of an SEC filing, such as a 10-Q or 10-K report, and export the statement to an Excel file.
+
+income_statement.to_excel('income-statement.xlsx')
+The resulting Excel file income-statement.xlsx looks like this.
+
+income-statement-exported-to-excel
+
+Extract a balance sheet from XBRL data and convert it to a pandas DataFrame
+The following function get_balance_sheet() extracts the balance sheet from the XBRL data of the 10-Q SEC filing and converts it into a pandas DataFrame.
+
+# convert XBRL-JSON of balance sheet to pandas dataframe
+def get_balance_sheet(xbrl_json):
+    balance_sheet_store = {}
+
+    for usGaapItem in xbrl_json['BalanceSheets']:
+        values = []
+        indicies = []
+
+        for fact in xbrl_json['BalanceSheets'][usGaapItem]:
+            # only consider items without segment.
+            if 'segment' not in fact:
+                index = fact['period']['instant']
+
+                # avoid duplicate indicies with same values
+                if index in indicies:
+                    continue
+                    
+                # add 0 if value is nil
+                if "value" not in fact:
+                    values.append(0)
+                else:
+                    values.append(fact['value'])
+
+                indicies.append(index)                    
+
+            balance_sheet_store[usGaapItem] = pd.Series(values, index=indicies) 
+
+    balance_sheet = pd.DataFrame(balance_sheet_store)
+    # switch columns and rows so that US GAAP items are rows and each column header represents a date instant
+    return balance_sheet.T
+
+balance_sheet = get_balance_sheet(aapl_xbrl)
+balance_sheet
+2021-09-25	2021-12-25	2022-09-24	2022-12-31
+CashAndCashEquivalentsAtCarryingValue	NaN	NaN	23646000000	20535000000
+MarketableSecuritiesCurrent	NaN	NaN	24658000000	30820000000
+AccountsReceivableNetCurrent	NaN	NaN	28184000000	23752000000
+InventoryNet	NaN	NaN	4946000000	6820000000
+NontradeReceivablesCurrent	NaN	NaN	32748000000	30428000000
+OtherAssetsCurrent	NaN	NaN	21223000000	16422000000
+AssetsCurrent	NaN	NaN	135405000000	128777000000
+MarketableSecuritiesNoncurrent	NaN	NaN	120805000000	114095000000
+PropertyPlantAndEquipmentNet	NaN	NaN	42117000000	42951000000
+OtherAssetsNoncurrent	NaN	NaN	54428000000	60924000000
+AssetsNoncurrent	NaN	NaN	217350000000	217970000000
+Assets	NaN	NaN	352755000000	346747000000
+AccountsPayableCurrent	NaN	NaN	64115000000	57918000000
+OtherLiabilitiesCurrent	NaN	NaN	60845000000	59893000000
+ContractWithCustomerLiabilityCurrent	NaN	NaN	7912000000	7992000000
+CommercialPaper	NaN	NaN	9982000000	1743000000
+LongTermDebtCurrent	NaN	NaN	11128000000	9740000000
+LiabilitiesCurrent	NaN	NaN	153982000000	137286000000
+LongTermDebtNoncurrent	NaN	NaN	98959000000	99627000000
+OtherLiabilitiesNoncurrent	NaN	NaN	49142000000	53107000000
+LiabilitiesNoncurrent	NaN	NaN	148101000000	152734000000
+Liabilities	NaN	NaN	302083000000	290020000000
+CommitmentsAndContingencies	NaN	NaN	0.0	0.0
+CommonStocksIncludingAdditionalPaidInCapital	NaN	NaN	64849000000	66399000000
+RetainedEarningsAccumulatedDeficit	NaN	NaN	-3068000000	3240000000
+AccumulatedOtherComprehensiveIncomeLossNetOfTax	NaN	NaN	-11109000000	-12912000000
+StockholdersEquity	63090000000	71932000000	50672000000	56727000000
+LiabilitiesAndStockholdersEquity	NaN	NaN	352755000000	346747000000
+Extract the address of a company from its SEC filing
+The next example illustrates how to extract the address of a company or filer from the cover page of an XBRL instance document attached to an SEC filing. For this example, we use one of Google's 10-K filings.
+
+The XBRL cover page includes information such as:
+
+Company's fiscal year end
+Trading symbols and exchanges
+Tax identification number
+Phone number
+Business and filer category, e.g. large accelerated filer or emerging growth company.
+goog_10k = "https://www.sec.gov/Archives/edgar/data/1652044/000165204423000016/goog-20221231.htm"
+goog_xbrl = xbrlApi.xbrl_to_json(htm_url=goog_10k)
+print("Cover page items")
+print('---------------------------------')
+print(*list(goog_xbrl["CoverPage"]), sep='\n')
+Cover page items
+---------------------------------
+DocumentType
+DocumentAnnualReport
+DocumentPeriodEndDate
+CurrentFiscalYearEndDate
+DocumentTransitionReport
+EntityFileNumber
+EntityRegistrantName
+EntityIncorporationStateCountryCode
+EntityTaxIdentificationNumber
+EntityAddressAddressLine1
+EntityAddressCityOrTown
+EntityAddressStateOrProvince
+EntityAddressPostalZipCode
+CityAreaCode
+LocalPhoneNumber
+Security12bTitle
+TradingSymbol
+SecurityExchangeName
+EntityWellKnownSeasonedIssuer
+EntityVoluntaryFilers
+EntityCurrentReportingStatus
+EntityInteractiveDataCurrent
+EntityFilerCategory
+EntitySmallBusiness
+EntityEmergingGrowthCompany
+IcfrAuditorAttestationFlag
+EntityShellCompany
+EntityPublicFloat
+EntityCommonStockSharesOutstanding
+DocumentsIncorporatedByReferenceTextBlock
+AmendmentFlag
+DocumentFiscalYearFocus
+DocumentFiscalPeriodFocus
+EntityCentralIndexKey
+We identify five relevant keys in the cover page that include information about the company's address:
+
+EntityAddressAddressLine1
+EntityAddressCityOrTown
+EntityAddressStateOrProvince
+EntityAddressPostalZipCode
+CityAreaCode
+cover = goog_xbrl["CoverPage"]
+
+print("Google's address:")
+print(cover["EntityAddressAddressLine1"])
+print(cover["EntityAddressCityOrTown"])
+print(cover["EntityAddressStateOrProvince"])
+print(cover["EntityAddressPostalZipCode"])
+print(cover["CityAreaCode"])
+Google's address:
+1600 Amphitheatre Parkway
+Mountain View
+CA
+94043
+650

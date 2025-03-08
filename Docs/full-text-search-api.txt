@@ -1,0 +1,338 @@
+Link: https://sec-api.io/docs/full-text-search-api
+Filing Full-Text Search API
+The SEC Filing Full-Text Search API enables searches across the full text of all EDGAR filings submitted since 2001. Each search scans the entire filing content, including all attachments, such as exhibits. Filing searches by keyword, ticker, company name, CIK, CUSIP number, and more - either individually or in combination - are fully supported. Boolean operators such as AND, OR, and NOT allow flexible search criteria, including requiring all words to appear, matching exact phrases, excluding terms, and using wildcards — all of which can be combined within a single search query. The API returns the metadata, such as the accession number, CIK, form type, URL of the source, and more, of filings and exhibits matching the search criteria.
+
+Dataset size:
+All EDGAR filings and exhibits published since 2001 to present, including all form types and all filers.
+Data update frequency:
+New filings are indexed and searchable in less than 60 seconds after they are published on EDGAR.
+Survivorship bias free:
+Yes. The Full-Text Search API includes all EDGAR filings and exhibits filed since 2001 to present, from filer entities that are still active and those that are no longer active.
+API Endpoint
+Full-text search queries are performed by sending a POST HTTP request with the search parameters as the payload to the following endpoint:
+
+https://api.sec-api.io/full-text-search
+Supported HTTP methods: POST
+
+Request and response content type: JSON
+
+Authentication
+To authenticate requests to the Full-Text Search API, use the API key shown in your user profile. Utilize the API key in one of two ways. Choose the method that best fits your implementation:
+
+Authorization Header: Include the API key as an Authorization header in POST requests. For instance, before sending a POST request to https://api.sec-api.io/full-text-search, ensure the header is set as follows: Authorization: YOUR_API_KEY
+Query Parameter: Alternatively, append the API key directly to the URL as a query parameter. For example, when making POST requests, use the URL https://api.sec-api.io/full-text-search?token=YOUR_API_KEY instead of the base API endpoint.
+
+Request Parameters
+To search the content of SEC filings and exhibits, send a HTTP POST request with a JSON-formatted payload to the API endpoint https://api.sec-api.io/full-text-search. The request body includes the search query, and optional parameters such as date range, CIK and form type filters, as well as a pagination parameter, for example:
+
+JSON
+{
+  "query": "\"substantial doubt\"", // search for the exact phrase "substantial doubt"
+  "formTypes": ["8-K", "10-K"],
+  "startDate": "2024-01-01",
+  "endDate": "2024-03-31",
+  "page": "2"
+}
+Supported parameters:
+
+query (string, required) - Defines the case-insensitive search term or phrase used to search the content of filings and their attachments. This can be a single word, phrase, or combination of words and phrases. Supported search features include wildcards (*), Boolean operators (OR, NOT), and exact phrase matching by enclosing phrases in quotation marks ("exact phrase"). By default, all terms are joined by an implicit AND operator.
+Single term matching: apple returns all filings and attachments mentioning "apple".
+Exact phrase matching: Enclose a phrase in quotation marks to search for it in the specified order.
+Example: "Fiduciary Product" will retrieve documents containing the exact phrase "Fiduciary Product" in that order.
+Wildcard searches: Append a * to a keyword to search for variations of that word (e.g., stem words). Wildcards cannot be used at the beginning or middle of a word, nor within exact phrase matches.
+Example: gas* finds documents containing terms like gas or gasoline.
+Boolean OR: Use OR (capitalized) between terms or phrases to specify that at least one of the terms must appear in the document. By default, all search words and phrases are required unless separated by OR.
+Example: Gasoline "Sacramento CA" OR "San Francisco CA" retrieves documents containing gasoline and either Sacramento CA or San Francisco CA.
+Exclusions: Use a hyphen (-) or the capitalized NOT keyword immediately before a term to exclude it from search results.
+Example: software -hardware finds documents containing software but excludes any that also contain hardware.
+startDate (string, optional) - Specifies the start date of a date range search with the startDate denoting the beginning of the range. Used in combination with endDate to find filings and exhibits filed between the two dates. The format is yyyy-mm-dd. Example: 2021-02-19. Default: 30 days ago.
+endDate (string, optional) - Specifies the end date of the date range search. Uses the same format as startDate: yyyy-mm-dd. Default: today.
+ciks (array of strings, optional) - Restricts search to filings from specific CIKs. Leading zeros are optional but may be included. Example: [ "0001811414", "1318605" ]. Default: all CIKs.
+formTypes (array of strings, optional) - Search specific EDGAR form types. If defined, only filings of the specified form types are considered. All other filing types are ignored. Example: [ "8-K", "10-Q", "10-K" ]. Default: all form types.
+page (string, optional) - Used for pagination. Each request returns 100 matching filings. Increase the page number to retrieve the next set of 100 filings. Example: 3 retrieves the third page. Default: 1.
+
+Full-Text Search Query Examples
+The following examples demonstrate how to construct full-text search queries to search EDGAR filings and exhibits containing specific terms or phrases. The search examples are case-insensitive and can be used as values of the query parameter of the Full-Text Search API.
+
+Description
+Example Search Query
+Search filings and exhibits for the term "SpaceX". The search is case-insensitive, so "spacex" will also match.
+SpaceX
+Search filings and exhibits for the terms "SpaceX" and "Elon". Both terms must be present in the document. The terms can be in any order.
+SpaceX Elon
+Search for the exact phrase "substantial doubt". Both words must be present in the document and in the exact order.
+"substantial doubt"
+Search for the exact phrase "substantial doubt" and "except for". Both phrases must be present in the document. The phrases can be in any order.
+"substantial doubt" "except for"
+Search for the exact phrase "substantial doubt" but exclude filings that contain the word "opinion"
+"substantial doubt" -opinion
+Search for filings that contain either the phrase "qualified opinion" or the phrase "In our opinion, except for". One of the phrases must be present in the document.
+"qualified opinion" OR "In our opinion, except for"
+Search for filings that contain either the phrase "identified material weakness" or the phrase "identified a material weakness". One of the phrases must be present in the document.
+"identified material weakness" OR "identified a material weakness"
+Search for filings that contain the term "gas" or any word that starts with "gas" (e.g., "gasoline", "gases") and the exact phrase "Sacramento CA" or "San Francisco CA".
+gas* "Sacramento CA" OR "San Francisco CA"
+Request Examples
+Request Example 1
+Search for filings and attachments containing the term "SpaceX" filed between January 1, 2020, and December 31, 2023, only considering the EDGAR form types 8-K and 10-Q. The request returns the first page of results, which includes 100 filings.
+
+JSON
+{
+  "query": "SpaceX",
+  "formTypes": ["8-K", "10-Q"],
+  "startDate": "2020-01-01",
+  "endDate": "2023-12-31"
+}
+Request Example 2
+Search for filings and attachments containing the term "gas" or any word that starts with "gas" (e.g., "gasoline", "gases") and the exact phrase "Sacramento CA" or "San Francisco CA" between December 31, 2018, and February 10, 2020, with form types 8-K and 10-Q. The request returns the second page of results, which includes filings 101-200.
+
+JSON
+{
+  "query": "gas* \"Sacramento CA\" OR \"San Francisco CA\"",
+  "formTypes": ["8-K", "10-Q"],
+  "startDate": "2018-12-31",
+  "endDate": "2020-02-10",
+  "page": "2"
+}
+Request Example 3
+Search for filings and attachments containing the exact phrase "model x" filed between October 15, 2020, and October 15, 2021, by the CIKs 0001811414 and 1318605. The request returns the first page of results, which includes 100 filings.
+
+JSON
+{
+  "query": "\"model x\"",
+  "ciks": ["0001811414", "1318605"],
+  "startDate": "2020-10-15",
+  "endDate": "2021-10-15"
+}
+Response Format
+The Full-Text Search API returns a JSON object with two keys: total and filings. Per response, filings contains up to 100 filings that match the search criteria. The maximum number of filings retrievable per search query is limited to 10,000 documents. Filings are sorted by an internal score based on the frequency of the search term in the document. The more frequently a term appears, the higher the score, with the highest-scoring filings returned first.
+
+The response object has the following structure:
+
+total (object) - Contains two properties: value and relation. If relation is "gte" (greater than or equal), value is set to 10,000, indicating that over 10,000 filings match the search query. The API returns a maximum of 100 filings per request. To retrieve filings beyond the first 100 matches, increase the page parameter in subsequent API calls. If relation is "eq" (equal), value reflects the exact number of filings matching the query, which will be fewer than 10,000. Exact counts are not calculated for results exceeding 10,000.
+filings (array) - An array of filing and exhibit metadata objects that meet the search criteria, with each object formatted as follows:
+accessionNo (string) - Accession number of the filing. Example: 0000065011-21-000020
+cik (string) - CIK of the filer, with leading zeros removed. Example: 65011
+companyNameLong (string) - Full name of the filing company. Example: MEREDITH CORP (MDP) (CIK 0000065011)
+ticker (string) - Ticker symbol of the filer, if available.
+description (string) - Description of the document. Example: EXHIBIT 99 FY21 Q2 EARNINGS PRESS RELEASE
+formType (string) - EDGAR filing type. Example: 8-K
+type (string) - Document type. Example: EX-99
+filingUrl (string) - URL to the filing or attachment. Example: https://www.sec.gov/Archives/edgar/data/65011/000006501121000020/fy21q2exh99earnings.htm
+filedAt (string) - Filing date in the format yyyy-mm-dd. Example: 2021-02-04
+Response Examples
+Response Example 1
+JSON
+{
+  "total": {
+      "value": 86,
+      "relation": "eq"
+  },
+  "filings": [
+      {
+          "accessionNo": "0000320193-20-000008",
+          "cik": "320193",
+          "companyNameLong": "Apple Inc. (AAPL) (CIK 0000320193)",
+          "ticker": "AAPL",
+          "description": "EXHIBIT 99.1",
+          "formType": "8-K",
+          "type": "EX-99.1",
+          "filingUrl": "https://www.sec.gov/Archives/edgar/data/320193/000032019320000008/a8-kexhibit991q1202012.htm",
+          "filedAt": "2020-01-28"
+      },
+      {
+          "accessionNo": "0000320193-20-000010",
+          "cik": "320193",
+          "companyNameLong": "Apple Inc. (AAPL) (CIK 0000320193)",
+          "ticker": "AAPL",
+          "description": "10-Q",
+          "formType": "10-Q",
+          "type": "10-Q",
+          "filingUrl": "https://www.sec.gov/Archives/edgar/data/320193/000032019320000010/a10-qq1202012282019.htm",
+          "filedAt": "2020-01-29"
+      },
+      {
+          "accessionNo": "0000320193-20-000008",
+          "cik": "320193",
+          "companyNameLong": "Apple Inc. (AAPL) (CIK 0000320193)",
+          "ticker": "AAPL",
+          "description": "8-K",
+          "formType": "8-K",
+          "type": "8-K",
+          "filingUrl": "https://www.sec.gov/Archives/edgar/data/320193/000032019320000008/a8-kq1202012282019.htm",
+          "filedAt": "2020-01-28"
+      },
+      {
+          "accessionNo": "0000320193-20-000010",
+          "cik": "320193",
+          "companyNameLong": "Apple Inc. (AAPL) (CIK 0000320193)",
+          "ticker": "AAPL",
+          "description": "EXHIBIT 32.1",
+          "formType": "10-Q",
+          "type": "EX-32.1",
+          "filingUrl": "https://www.sec.gov/Archives/edgar/data/320193/000032019320000010/a10-qexhibit32112282019.htm",
+          "filedAt": "2020-01-29"
+      },
+      {
+          "accessionNo": "0001193125-20-013100",
+          "cik": "1730168",
+          "companyNameLong": "Broadcom Inc. (AVGO, AVGOP) (CIK 0001730168)",
+          "ticker": "AVGO",
+          "description": "8-K",
+          "formType": "8-K",
+          "type": "8-K",
+          "filingUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000119312520013100/d873855d8k.htm",
+          "filedAt": "2020-01-23"
+      }
+  ]
+}
+Response Example 2
+JSON
+{
+  "total": {
+      "value": 21,
+      "relation": "eq"
+  },
+  "filings": [
+      {
+          "accessionNo": "0001615774-19-006819",
+          "cik": "778164",
+          "companyNameLong": "Pacific Ethanol, Inc. (PEIX) (CIK 0000778164)",
+          "ticker": "ALTO",
+          "description": "EXHIBIT 99.1",
+          "formType": "8-K",
+          "type": "EX-99.1",
+          "filingUrl": "https://www.sec.gov/Archives/edgar/data/778164/000161577419006819/s117892_ex99-1.htm",
+          "filedAt": "2019-05-01"
+      },
+      {
+          "accessionNo": "0001213900-19-022368",
+          "cik": "778164",
+          "companyNameLong": "Pacific Ethanol, Inc. (PEIX) (CIK 0000778164)",
+          "ticker": "ALTO",
+          "description": "PRESS RELEASE DATED NOVEMBER 7, 2019",
+          "formType": "8-K",
+          "type": "EX-99.1",
+          "filingUrl": "https://www.sec.gov/Archives/edgar/data/778164/000121390019022368/f8k1119ex99-1_pacific.htm",
+          "filedAt": "2019-11-07"
+      },
+      {
+          "accessionNo": "0001564590-19-016638",
+          "cik": "1492422",
+          "companyNameLong": "Apellis Pharmaceuticals, Inc. (APLS) (CIK 0001492422)",
+          "ticker": "APLS",
+          "description": "EX-10.2",
+          "formType": "10-Q",
+          "type": "EX-10.2",
+          "filingUrl": "https://www.sec.gov/Archives/edgar/data/1492422/000156459019016638/apls-ex102_113.htm",
+          "filedAt": "2019-05-07"
+      },
+      {
+          "accessionNo": "0001162194-19-000033",
+          "cik": "1162194",
+          "companyNameLong": "FLUIDIGM CORP (FLDM) (CIK 0001162194)",
+          "ticker": "FLDM",
+          "description": "EXHIBIT 10.1",
+          "formType": "10-Q",
+          "type": "EX-10.1",
+          "filingUrl": "https://www.sec.gov/Archives/edgar/data/1162194/000116219419000033/ex101.htm",
+          "filedAt": "2019-05-07"
+      }
+  ]
+}
+Full-Text Search of SEC Filings With Python
+This page provides ready-to-execute Python code that demonstrates how to run a full-text search on SEC filings using the sec-api Python package and the Full-Text Search API.
+
+Quick Start
+Open In Colab   Download Notebook
+
+This example demonstrates how to use the sec-api Python package to query SEC filings and exhibits via the Full-Text Search API, specifically filtering Form 8-K and Form 10-Q filings for keywords like "substantial doubt" or "going concern". The FullTextSearchApi class’s .get_filings(params) method retrieves the first 100 results that match the search criteria.
+
+Key parameters used in .get_filings are as follows:
+
+query (string): The keyword or phrase to search, such as "substantial doubt" OR "material weakness".
+formTypes (list of strings, optional): Limits search to specific SEC form types (e.g., ["8-K", "10-Q"]). Default is None (all form types).
+ciks (list of strings, optional): Filters results to filings by specified CIKs. Default is None (all filers).
+startDate (string optional): Start date for the search range in yyyy-mm-dd format. Used with endDate to define the date range. Example: "2024-01-01". Default is 30 days ago.
+endDate (string, optional): End date for the search range, in the same format as startDate. Default is today.
+page (string, optional): Pagination for results. Default is "1".
+!pip install sec-api
+from sec_api import FullTextSearchApi
+
+fullTextSearchApi = FullTextSearchApi("YOUR_API_KEY")
+search_parameters = {
+    # search filings for "substantial doubt" or "going concern"
+    # in 8-K and 10-Q forms filed between 2024-01-01 and 2024-03-31
+    "query": '"substantial doubt" OR "material weakness"',
+    "formTypes": ["8-K", "10-Q"],
+    "startDate": "2024-01-01",
+    "endDate": "2024-03-31",
+}
+
+response = fullTextSearchApi.get_filings(search_parameters)
+import json
+
+filings_json = response["filings"]
+
+print(f"Total number of filings found: {response['total']['value']}")
+print("First 4 search results:")
+print(json.dumps(filings_json[:4], indent=2))
+Total number of filings found: 1199
+First 4 search results:
+[
+  {
+    "accessionNo": "0001493152-24-000160",
+    "cik": "1849380",
+    "companyNameLong": "OneMedNet Corp (ONMD, ONMDW) (CIK 0001849380)",
+    "ticker": "ONMD",
+    "description": null,
+    "formType": "8-K",
+    "type": "8-K",
+    "filingUrl": "https://www.sec.gov/Archives/edgar/data/1849380/000149315224000160/form8-k.htm",
+    "filedAt": "2024-01-03"
+  },
+  {
+    "accessionNo": "0001558370-24-001305",
+    "cik": "1837607",
+    "companyNameLong": "AEON Biopharma, Inc. (AEON) (CIK 0001837607)",
+    "ticker": "AEON",
+    "description": "8-K",
+    "formType": "8-K",
+    "type": "8-K",
+    "filingUrl": "https://www.sec.gov/Archives/edgar/data/1837607/000155837024001305/aeon-20240214x8k.htm",
+    "filedAt": "2024-02-16"
+  },
+  {
+    "accessionNo": "0001104659-24-003305",
+    "cik": "808326",
+    "companyNameLong": "EMCORE CORP (EMKR) (CIK 0000808326)",
+    "ticker": "EMKR",
+    "description": "FORM 8-K",
+    "formType": "8-K",
+    "type": "8-K",
+    "filingUrl": "https://www.sec.gov/Archives/edgar/data/808326/000110465924003305/tm243054d1_8k.htm",
+    "filedAt": "2024-01-11"
+  },
+  {
+    "accessionNo": "0001017386-24-000024",
+    "cik": "745543",
+    "companyNameLong": "PETRO USA, INC. (PBAJ) (CIK 0000745543)",
+    "ticker": "PBAJ",
+    "description": "QUARTERLY REPORT",
+    "formType": "10-Q",
+    "type": "10-Q",
+    "filingUrl": "https://www.sec.gov/Archives/edgar/data/745543/000101738624000024/atpt_2023dec31-10q.htm",
+    "filedAt": "2024-02-21"
+  }
+]
+import pandas as pd
+
+filings_df = pd.DataFrame(filings_json)
+
+filings_df.head()
+accessionNo	cik	companyNameLong	ticker	description	formType	type	filingUrl	filedAt
+0	0001493152-24-000160	1849380	OneMedNet Corp (ONMD, ONMDW) (CIK 0001849380)	ONMD	None	8-K	8-K	https://www.sec.gov/Archives/edgar/data/184938...	2024-01-03
+1	0001558370-24-001305	1837607	AEON Biopharma, Inc. (AEON) (CIK 0001837607)	AEON	8-K	8-K	8-K	https://www.sec.gov/Archives/edgar/data/183760...	2024-02-16
+2	0001104659-24-003305	808326	EMCORE CORP (EMKR) (CIK 0000808326)	EMKR	FORM 8-K	8-K	8-K	https://www.sec.gov/Archives/edgar/data/808326...	2024-01-11
+3	0001017386-24-000024	745543	PETRO USA, INC. (PBAJ) (CIK 0000745543)	PBAJ	QUARTERLY REPORT	10-Q	10-Q	https://www.sec.gov/Archives/edgar/data/745543...	2024-02-21
+4	0001829126-24-000775	1853044	Aeries Technology, Inc. (AERT, AERTW) (CIK 000...	AERT	8-K	8-K	8-K	https://www.sec.gov/Archives/edgar/data/185304...	2024-02-07

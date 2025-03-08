@@ -1,0 +1,619 @@
+Link: https://sec-api.io/docs/sec-filings-item-extraction-api
+Extractor API
+10-K/10-Q/8-K Extractor API
+Content section extracted from 10-K filing
+The Extractor API extracts any text section from 10-Q, 10-K and 8-K SEC filings, and returns the extracted content in cleaned and standardized text or HTML format. Send the URL of the filing, the section name (e.g. Item 1A) and the return data type (e.g. raw text) to the Extractor API and the extracted content is returned.
+
+You can programmatically extract one or multiple text sections from any 10-Q, 10-K and 8-K filing. The extracted section item is returned as clear-text without HTML tags or standardized HTML. There is no need to develop your own item extraction algorithm anymore. Amended filings, such as 10-Q/A, 10-K/A and 8-K/A as well as all 10-K form variants, such as 10-KT, 10KSB, are also supported.
+
+Dataset size:
+All sections of all 10-K, 10-Q and 8-K filings including their variants filed since 1994 to present.
+Data update frequency:
+Extracted sections from new filings are available within 300 milliseconds after their publication on EDGAR.
+Survivorship bias free:
+Yes. The Extractor API provides sections of all 10-K, 10-Q and 8-K filings filed since 1994 to present, from filer entities that are still active and those that are no longer active.
+Supported 10-K Section Items
+The Extractor API supports extracting all section items from Form 10-K filings as listed below:
+
+1 - Business
+1A - Risk Factors
+1B - Unresolved Staff Comments
+1C - Cybersecurity
+2 - Properties
+3 - Legal Proceedings
+4 - Mine Safety Disclosures
+5 - Market for Registrant’s Common Equity, Related Stockholder Matters and Issuer Purchases of Equity Securities
+6 - Selected Financial Data (prior to February 2021)
+7 - Management’s Discussion and Analysis of Financial Condition and Results of Operations
+7A - Quantitative and Qualitative Disclosures about Market Risk
+8 - Financial Statements and Supplementary Data
+9 - Changes in and Disagreements with Accountants on Accounting and Financial Disclosure
+9A - Controls and Procedures
+9B - Other Information
+10 - Directors, Executive Officers and Corporate Governance
+11 - Executive Compensation
+12 - Security Ownership of Certain Beneficial Owners and Management and Related Stockholder Matters
+13 - Certain Relationships and Related Transactions, and Director Independence
+14 - Principal Accountant Fees and Services
+15 - Exhibits and Financial Statement Schedules
+The item extractor supports all 10-K form types including old fashioned TXT versions filed prior to 2003. Supported types include:
+10-K/A, 10-KT/A, 10KSB, 10KSB/A, 10KT405, 10KT405/A, 10KSB40, 10KSB40/A, 10-K405, 10-K405/A, 10KSB, 10KSB
+
+Supported 10-Q Section Items
+The Extractor API supports extracting all section items from Form 10-Q filings as listed below:
+
+Part 1:
+1 - Financial Statements
+2 - Management’s Discussion and Analysis of Financial Condition and Results of Operations
+3 - Quantitative and Qualitative Disclosures About Market Risk
+4 - Controls and Procedures
+Part 2:
+1 - Legal Proceedings
+1A - Risk Factors
+2 -Unregistered Sales of Equity Securities and Use of Proceeds
+3 - Defaults Upon Senior Securities
+4 - Mine Safety Disclosures
+5 - Other Information
+6 - Exhibits
+Supported 8-K Section Items
+The Extractor API supports extracting all section items for each triggering event from Form 8-K filings as listed below:
+
+1.01: Entry into a Material Definitive Agreement
+1.02: Termination of a Material Definitive Agreement
+1.03: Bankruptcy or Receivership
+1.04: Mine Safety - Reporting of Shutdowns and Patterns of Violations
+1.05: Material Cybersecurity Incidents (introduced in 2023)
+2.01: Completion of Acquisition or Disposition of Assets
+2.02: Results of Operations and Financial Condition
+2.03: Creation of a Direct Financial Obligation or an Obligation under an Off-Balance Sheet Arrangement of a Registrant
+2.04: Triggering Events That Accelerate or Increase a Direct Financial Obligation or an Obligation under an Off-Balance Sheet Arrangement
+2.05: Cost Associated with Exit or Disposal Activities
+2.06: Material Impairments
+3.01: Notice of Delisting or Failure to Satisfy a Continued Listing Rule or Standard; Transfer of Listing
+3.02: Unregistered Sales of Equity Securities
+3.03: Material Modifications to Rights of Security Holders
+4.01: Changes in Registrant's Certifying Accountant
+4.02: Non-Reliance on Previously Issued Financial Statements or a Related Audit Report or Completed Interim Review
+5.01: Changes in Control of Registrant
+5.02: Departure of Directors or Certain Officers; Election of Directors; Appointment of Certain Officers: Compensatory Arrangements of Certain Officers
+5.03: Amendments to Articles of Incorporation or Bylaws; Change in Fiscal Year
+5.04: Temporary Suspension of Trading Under Registrant's Employee Benefit Plans
+5.05: Amendments to the Registrant's Code of Ethics, or Waiver of a Provision of the Code of Ethics
+5.06: Change in Shell Company Status
+5.07: Submission of Matters to a Vote of Security Holders
+5.08: Shareholder Nominations Pursuant to Exchange Act Rule 14a-11
+6.01: ABS Informational and Computational Material
+6.02: Change of Servicer or Trustee
+6.03: Change in Credit Enhancement or Other External Support
+6.04: Failure to Make a Required Distribution
+6.05: Securities Act Updating Disclosure
+6.06: Static Pool
+6.10: Alternative Filings of Asset-Backed Issuers
+7.01: Regulation FD Disclosure
+8.01: Other Events
+9.01: Financial Statements and Exhibits
+Signature
+In very rare cases (~1 in 1,000 filings) a filing contains multiple sections merged into one section. Those cases are not covered by the extractor API.
+
+API Endpoint
+Extracted sections from 10-K, 10-Q and 8-K filings are obtained by sending a HTTP GET request with the URL of the filing, the item ID of the section and the return data type (HTML or text) to the following endpoint:
+
+https://api.sec-api.io/extractor
+Supported HTTP method: GET
+
+Response content type: text or HTML. The type depends on the return type parameter in the request. For example, set type=text to return the extracted section as plain text. Set type=html to return the extracted section as HTML.
+
+Request Parameters
+url (required) - URL of the 10-K, 10-Q or 8-K filing. For example, the URL of Tesla's 10-K filing for the fiscal year ended December 31, 2020 is https://www.sec.gov/Archives/edgar/data/1318605/000156459021004599/tsla-10k_20201231.htm
+The URL can represent the .txt or .htm version of the filing.
+item (required) - The item to be extracted, e.g. 1A. One item per API call is supported.
+10-K supported item codes: 1, 1A, 1B, 1C, 2, 3, 4, 5, 6, 7, 7A, 8, 9, 9A, 9B, 10, 11, 12, 13, 14, 15
+10-Q supported item codes: part1item1, part1item2, part1item3, part1item4, part2item1, part2item1a, part2item2, part2item3, part2item4, part2item5, part2item6
+8-K supported item codes: 1-1, 1-2, 1-3, 1-4, 1-5, 2-1, 2-2, 2-3, 2-4, 2-5, 2-6, 3-1, 3-2, 3-3, 4-1, 4-2, 5-1, 5-2, 5-3, 5-4, 5-5, 5-6, 5-7, 5-8, 6-1, 6-2, 6-3, 6-4, 6-5, 6-6, 6-10, 7-1, 8-1, 9-1, signature
+type (optional) - The return type of the item can be text or html. text returns clear, formatted text without any XBRL, XML or HTML tags. For text, HTML character entities such as &#160; are not removed and the start and end of tables are marked with ##TABLE_START and ##TABLE_END respectively. The text return type is commonly used for NLP tasks. html returns the orignal, cleaned HTML version of the item including tables. Default: text
+token (required) - Your API key.
+
+Important: If you send a 10-Q filing URL to the Extractor API while providing an item code not supported by 10-Q filings, you will encounter a request error. For example, the 10-K item code 1A (risk factor section) is not included in 10-Q filings. Therefore, item 1A cannot be extracted from 10-Q filings. The correct 10-Q item code is part2item1a.
+Request Examples
+Get item 1A (Risk Factors) in clear text from Tesla's recent 10-K filing:
+
+https://api.sec-api.io/extractor?
+url=https://www.sec.gov/Archives/edgar/data/1318605/000156459021004599/tsla-10k_20201231.htm&
+item=1A&
+type=text&
+token=YOUR_API_KEY
+
+Get item 8 (Financial Statements and Supplementary Data) as HTML from Apple's recent 10-K filing:
+
+https://api.sec-api.io/extractor?
+url=https://www.sec.gov/Archives/edgar/data/320193/000032019321000056/aapl-20210327.htm&
+item=8&
+type=html&
+token=YOUR_API_KEY
+
+Get item 1A in part 2 (Risk Factors) as HTML from Microsoft's recent 10-Q filing:
+
+https://api.sec-api.io/extractor?
+url=https://www.sec.gov/Archives/edgar/data/789019/000156459022015675/msft-10q_20220331.htm&
+item=part2item1a&
+type=html&
+token=YOUR_API_KEY
+
+Response Format
+The Extractor API returns the extracted item section in clear text or HTML format. The following are examples of the extracted Item 1A (Risk Factors) section from a 10-K filing in clear text and HTML format.
+
+Text Example of Item 1A:
+Text
+You should carefully consider the risks described below together with the other information set forth in this report, which could materially affect our business, financial condition and future results. The risks described below are not the only risks facing our company. Risks and uncertainties not currently known to us or that we currently deem to be immaterial also may materially adversely affect our business, financial condition and operating results.
+Risks Related to Our Ability to Grow Our Business
+We may be impacted by macroeconomic conditions resulting from the global COVID-19 pandemic.
+Since the first quarter of 2020, there has been a worldwide impact from the COVID-19 pandemic. Government regulations and shifting social behaviors have limited or closed non-essential transportation, government functions, business activities and person-to-person interactions. In some cases, the relaxation of such trends has recently been followed by actual or contemplated returns to stringent restrictions on gatherings or commerce, including in parts of the U.S. and a number of areas in Europe.
+We temporarily suspended operations at each of our manufacturing facilities worldwide for a part of the first half of 2020. Some of our suppliers and partners also experienced temporary suspensions ... 
+... (truncated)
+HTML Example of Item 1A:
+HTML
+<p>RISK FACTORS</p>
+<p>
+  You should carefully consider the risks described below together with the
+  other information set forth in this report, which could materially affect our
+  business, financial condition and future results. The risks described below
+  are not the only risks facing our company. Risks and uncertainties not
+  currently known to us or that we currently deem to be immaterial also may
+  materially adversely affect our business, financial condition and operating
+  results.
+</p>
+<p>Risks Related to Our Ability to Grow Our Business</p>
+<p>
+  We may be impacted by macroeconomic conditions resulting from the global
+  COVID-19 pandemic.
+</p>
+<p>
+  Since the first quarter of 2020, there has been a worldwide impact from the
+  COVID-19 pandemic. Government regulations and shifting social behaviors have
+  limited or closed non-essential transportation, government functions, business
+  activities and person-to-person interactions.
+  <span>In some cases, the relaxation of such trends has recently been followed by
+    actual or contemplated returns to stringent restrictions on gatherings or
+    commerce, including in parts of the U.S. and a number of areas in
+    Europe.</span
+          
+  >
+</p>
+<p>
+  We temporarily suspended operations at each of our manufacturing facilities
+  worldwide for a part of the first half of 2020. Some of our suppliers and
+  partners also experienced temporary suspensions ...
+</p>
+... (truncated)
+Frequently Asked Questions
+API Processing Response
+The "processing" response status occurs when:
+
+A recent filing has been submitted and our system is extracting the sections. This usually resolves quickly as the system finishes its processing. Waiting for 500 to 1000 milliseconds before retrying usually results in successfully obtaining the extracted section.
+You've requested a section from a filing that may not exist, often in 8-K filings which don't always include all sections. Our system will try to extract the section, causing the "processing" status. For 8-Ks, verify section existence using our Query API, which provides a metadata object with an items property listing the sections contained in the filing.
+Should the "processing" response persist after three retries, each delayed by 500 to 1000 milliseconds, it is likely that the section is non-extractable, possibly due to its absence or other reasons detailed below.
+
+Empty Sections and Unparseble Filings
+Filings prior to the Sarbanes-Oxley Act (SOX) in 2002, such as 10-K and 10-Q reports, may not have a well standardized structure, which can affect the extractability of sections, particularly for older documents. To collate and download sections from 10-K, 10-Q and 8-K filings, use our Query API to compile a list of metadata objects for all such form types. This includes the accession numbers, filing URLs, publication dates, CIKs, ticker symbols, and referenced entities.
+
+Before building this dataset, understanding the difference between filing ID, accession number, CIK and their interrelationships is crucial:
+
+The id property from the Query API uniquely identifies a metadata object in our database.
+The accessionNo property uniquely identifies a filing within the EDGAR database.
+The cik property uniquly identifies a filer within the EDGAR database.
+When collecting filing metadata, it's possible to encounter multiple metadata objects linked to the same filing. Each object will have a unique id but share the same accessionNo. The differences between these objects are found in the id, cik,ticker, and companyName properties. This occurs because the EDGAR index includes a record for each entity referenced in a filing. For example, Entergy's 10-Q filing references seven entities, resulting in seven metadata objects and filing URLs. However, all these point to one filing identified by a single accession number. For accurate dataset compilation, it's essential to remove duplicates based on the accessionNo, ensuring each accession number is unique within your dataset, rather than relying on the id.
+
+intel-10-k-referencing-one-entity
+Figure: Intel's 10-K filing referencing one entity
+entergy-10-k-referencing-seven-entities
+Figure: Entergy's 10-Q filing referencing seven entities
+Before extracting sections with your metadata dataset, it's important to refine it to exclude filings of entities that do not provide standard filing sections. Trusts and REITs, for instance, file 10-Ks and 10-Qs but may lack sections like Management Discussion and Analysis (MD&A). Use our Mapping API to correlate the CIKs with SIC codes (sic) and security types (category) and exclude irrelevant entities. Common exclusions are:
+
+Security type (category) that fall into ETD, ETF, UNIT, CEF categories.
+SIC code (sic) corresponding to 6189 (asset-backed securities) and 6798 (Real Estate Investment Trusts).
+Our Extractor API may not cover some sections of 10-K, 10-Q and 8-K filings, particularly those from trusts with non-standard structures or empty sections. Here are examples of such filings:
+
+STRATS Trust's 10-K has an empty MD&A section. View Filing
+CorTS Trust's 10-K also lacks an MD&A section. View Filing
+Sabine Royalty Trust's 10-K includes a section titled "Trustee's Discussion and Analysis". View Filing
+North European Oil Royalty Trust's 10-Q does not follow a standardized filing structure and omits the MD&A section. View Filing
+Non-standard filings that don't follow the SEC's proposed filing structure can also impede extraction. For instance:
+
+Citigroup's 10-K has a scattered Item 7 MD&A, making it difficult to parse as it is distributed across various parts of the document. View Filing
+GE's 10-K presents an overlapping structure where Item 1 spans multiple, non-sequential pages and intersects with other items, complicating extraction. View Filing
+Intel's 10-K, similar to GE's filing, spreads the business section in Item 1 across various non-sequential pages, making the reliable extraction of Item 1 unfeasible. View Filing
+For tasks like backtesting trading strategies that rely on data from extracted filing sections, it's recommended to focus on filings post-2004. This recommendation is due to the significant changes in the SEC's filing requirements, disclosure activity, and the number of active entities on EDGAR after the SOX regulations took effect. The adoption of Form 8-K and Form 4 filings became more prevalent after this period. This shift is highlighted by two figures:
+
+annually-active-edgar-entities-and-annual-filing-volume
+Figure: Annual number of active EDGAR entities and volume of filings from 1994 to 2022.
+annual-filing-volume-of-top-20-most-common-form-types
+Figure: Annual number of filings for top 20 most commonly filed forms from 1994 to 2022.
+References
+For more information about Form 10-K, 10-Q and 8-K filings visit the SEC websites here:
+
+Form 10-K General Instructions
+Form 10-Q General Instructions
+Form 8-K General Instructions
+Regulations
+§ 240.13a-11 Current reports on Form 8-K (§ 249.308 of this chapter).
+§ 240.15d-1 Requirement of annual reports
+§ 240.15d-13 Quarterly reports on Form 10-Q
+§ 249.308 Form 8-K, for current reports
+§ 249.310 Form 10-K, for annual and transition reports pursuant to sections 13 or 15(d) of the Securities Exchange Act of 1934.
+§ 249.308a Form 10-Q, for quarterly and transition reports under sections 13 or 15(d) of the Securities Exchange Act of 1934.
+Research Papers
+Lazy Prices
+The Incremental Information Content of Tone Change in Management Discussion and Analysis
+Financial Reporting Complexity and Investor Underreaction to 10-K Information
+The 8-K Trading Gap
+What are You Saying? Using Topic to Detect Financial Misreporting
+Using 10-K Text to Gauge Financial Constraints
+Guiding through the Fog: Does annual report readability reveal earnings management?
+Plain English, Readability, and 10-K Filings
+FinBERT - A Large Language Model for Extracting Information from Financial Text
+
+Extract Section Items From SEC Filings With Python
+In this guide, we'll explore how you can extract sections from 10-K, 10-Q and 8-K SEC filings using the Extractor API in Python.
+
+On this page:
+Quick start
+10-K Filings - Item IDs
+10-Q Filings - Item IDs
+8-K Filings - Item IDs
+Extract Sections from 10-K Filings
+Extract Sections from 10-Q Filings
+Extract Sections from 8-K Filings
+Extract and Download Sections from 10-K Filings Over Multiple Years
+Clean Extracted Sections: Remove Newline Characters and Decode HTML Entities
+Quick Start
+Open In Colab   Download Notebook
+
+This ready-to-execute example demonstrates how to extract various text and content sections from SEC filings, including 10-K, 10-Q, and 8-K forms, using the .get_section(filing_url, item_id, return_type) method from the ExtractorApi class in the sec-api Python package. The example covers extracting both HTML and text sections for the following items:
+
+10-K, Item 1.A: Risk Factors
+10-K, Item 7: Management’s Discussion and Analysis (MD&A)
+10-Q, Part 2, Item 1.A: Risk Factors
+10-Q, Part 2, Item 7: MD&A
+8-K, Item 1.01: Entry into a Material Definitive Agreement
+8-K, Item 4.01: Changes in Registrant’s Certifying Accountant
+!pip install sec-api
+from sec_api import ExtractorApi
+
+extractorApi = ExtractorApi("YOUR_API_KEY")
+
+# 10-K example
+url_10k = "https://www.sec.gov/Archives/edgar/data/1318605/000156459021004599/tsla-10k_20201231.htm"
+# extract Item 1.A Risk Factors from 10-K filing in text format
+item_1A_text = extractorApi.get_section(url_10k, "1A", "text")
+# extract Item 7 "MD&A" from 10-K filing in html format
+item_7_html = extractorApi.get_section(url_10k, "7", "html")
+
+# 10-Q example
+url_10q = "https://www.sec.gov/Archives/edgar/data/1318605/000095017022006034/tsla-20220331.htm"
+# extract Part II Item 1A Risk Factors from 10-Q filing in text format
+part2_item_1A_text = extractorApi.get_section(url_10q, "part2item1a", "text")
+# extract Part II Item 7 "MD&A" from 10-Q filing in html format
+part2_item_7_html = extractorApi.get_section(url_10q, "part2item7", "html")
+
+# 8-K example
+url_8k = "https://www.sec.gov/Archives/edgar/data/66600/000149315222016468/form8-k.htm"
+# extract Item 1.01 Entry into a Material Definitive Agreement from 8-K filing in text format
+item_1_1_text = extractorApi.get_section(url_8k, "1-1", "text")
+# extract Item 4.01 Changes in Registrant's Certifying Accountant from 8-K filing in html format
+item_1_1_html = extractorApi.get_section(url_8k, "4-1", "html")
+Item IDs by Form Type
+10-K Filings - Item IDs
+item_ids_10K = [
+    "1", "1A", "1B", "1C", "2", "3", "4",
+    "5", "6", "7", "7A", "8", "9", "9A", "9B",
+    "10", "11", "12", "13", "14", "15"
+]
+10-Q Filings - Item IDs for Part 1 and Part 2
+item_ids_10Q = [
+    # Part 1
+    "part1item1", "part1item2", "part1item3", "part1item4",
+    # Part 2
+    "part2item1", "part2item1a", "part2item2", "part2item3",
+    "part2item4", "part2item5", "part2item6"
+]
+8-K Filings - Item IDs
+item_ids_8K = [
+    # Item 1.x
+    "1-1", "1-2", "1-3", "1-4", "1-5",
+    # Item 2.x
+    "2-1", "2-2", "2-3", "2-4", "2-5", "2-6",
+    # Item 3.
+    "3-1", "3-2", "3-3",
+    # Item 4.x
+    "4-1", "4-2",
+    # Item 5.x
+    "5-1", "5-2", "5-3", "5-4", "5-5", "5-6", "5-7", "5-8",
+    # Item 6.x
+    "6-1", "6-2", "6-3", "6-4", "6-5", "6-6", "6-10",
+    # Item 7.x
+    "7-1",
+    # Item 8.x
+    "8-1",
+    # Item 9.x
+    "9-1",
+    # Miscellaneous
+    "signature"
+]
+Extract Item Sections from 10-K Filings
+Open In Colab   Download Notebook
+
+The following Python code extracts specific sections from Tesla’s 10-K filing: Item 1.A "Risk Factors" as plain text (without HTML tags) and Item 7 "MD&A" as original HTML. By specifying the filing URL, item ID, and desired return type (text or html), the Extractor API returns the requested section content.
+
+!pip install sec-api
+from sec_api import ExtractorApi
+
+extractorApi = ExtractorApi("YOUR_API_KEY")
+# Tesla 10-K filing
+filing_url = "https://www.sec.gov/Archives/edgar/data/1318605/000156459021004599/tsla-10k_20201231.htm"
+
+# get the standardized and cleaned text of section 1A "Risk Factors"
+section_text = extractorApi.get_section(filing_url, "1A", "text")
+
+# get the original HTML of section 7 
+# "Management’s Discussion and Analysis of Financial Condition and Results of Operations"
+section_html = extractorApi.get_section(filing_url, "7", "html")
+By reviewing the first 1,000 characters of the section_text response for Item 1A (Risk Factors), the cleaned and standardized text version of the extracted item is visible. Newline characters () and special character entities are preserved, allowing algorithms to easily identify lists and headings.
+
+print("Tesla 10-K Risk Factors Section:")
+print("--------------------------------")
+print(section_text[:1000] + '...')
+Tesla 10-K Risk Factors Section:
+--------------------------------
+ ITEM 1A. RISK FACTORS
+
+You should carefully consider the risks described below together with the other information set forth in this report, which could materially affect our business, financial condition and future results. The risks described below are not the only risks facing our company. Risks and uncertainties not currently known to us or that we currently deem to be immaterial also may materially adversely affect our business, financial condition and operating results. 
+
+Risks Related to Our Ability to Grow Our Business
+
+We may be impacted by macroeconomic conditions resulting from the global COVID-19 pandemic.
+
+Since the first quarter of 2020, there has been a worldwide impact from the COVID-19 pandemic. Government regulations and shifting social behaviors have limited or closed non-essential transportation, government functions, business activities and person-to-person interactions. In some cases, the relaxation of such trends has recently been followed by actual or contempla...
+To inspect the extracted HTML version of the MD&A section (Item 7), use the display and HTML functions as shown below. For brevity, only the first 2,000 characters of the extracted HTML content are displayed.
+
+To ensure correct rendering when viewing the notebook here, the HTML section is prepended with <div><table><tr><td> tags. This step is not necessary when running the notebook locally.
+
+from IPython.display import display, HTML
+display(HTML("<div><table><tr><td>" + section_html[0:2034]))
+ITEM 7.	
+MANAGEMENT’S DISCUSSION AND ANALYSIS OF FINANCIAL CONDITION AND RESULTS OF OPERATIONS
+
+The following discussion and analysis should be read in conjunction with the consolidated financial statements and the related notes included elsewhere in this Annual Report on Form 10-K. For discussion related to changes in financial condition and the results of operations for fiscal year 2018-related items, refer to Part II, Item 7. Management's Discussion and Analysis of Financial Condition and Results of Operations in our Annual Report on Form 10-K for fiscal year 2019, which was filed with the Securities and Exchange Commission on February 13, 2020.
+
+Overview and 2020 Highlights
+
+Our mission is to accelerate the world’s transition to sustainable energy. We design, develop, manufacture, lease and sell high-performance fully electric vehicles, solar energy generation systems and energy storage products. We also offer maintenance, installation, operation, financial and other services related to our products.
+
+Using the URL of the text version of the filing, which ends in .txt, is also supported as an alternative to the HTML version ending in .htm.
+
+# txt version of Tesla's 10-K filing
+filing_url = "https://www.sec.gov/Archives/edgar/data/1318605/000156459021004599/0001564590-21-004599.txt"
+
+section_text = extractorApi.get_section(filing_url, "1A", "text")
+Extract Item Sections from 10-Q Filings
+Open In Colab   Download Notebook
+
+Extracting sections from 10-Q filings follows the same boilerplate code as for 10-K filings, with the only difference being the use of the 10-Q filing URL and the appropriate item code.
+
+Since the structure of 10-Q filings differs from that of 10-Ks, it’s essential to use the correct item codes specific to each filing type. For example, to extract Item 1A (Risk Factors) from Part 2 of a 10-Q filing, the item code is part2item1a. In contrast, extracting the same section from a 10-K filing would require the item code 1A.
+
+The example below demonstrates this approach for a 10-Q filing.
+
+from sec_api import ExtractorApi
+
+extractorApi = ExtractorApi("YOUR_API_KEY")
+
+# Tesla 10-Q filing
+filing_url = "https://www.sec.gov/Archives/edgar/data/1318605/000095017022006034/tsla-20220331.htm"
+
+# extract section 1A "Risk Factors" in part 2 as cleaned text
+section_text = extractorApi.get_section(filing_url, "part2item1a", "text")
+
+print('Tesla 10-Q filing section 1A "Risk Factors" in part 2 as cleaned text:')
+print('---------------------------------------------------------------------')
+print(section_text[:1000] + '...')
+Tesla 10-Q filing section 1A "Risk Factors" in part 2 as cleaned text:
+---------------------------------------------------------------------
+ ITEM 1A.RISK FACTORS 
+
+You should carefully consider the risks described below together with the other information set forth in this report, which could materially affect our business, financial condition and future results. The risks described below are not the only risks facing our company. Risks and uncertainties not currently known to us or that we currently deem to be immaterial also may materially adversely affect our business, financial condition and operating results. 
+
+Risks Related to Our Ability to Grow Our Business 
+
+We may be impacted by macroeconomic conditions resulting from the global COVID-19 pandemic. 
+
+Since the first quarter of 2020, there has been a worldwide impact from the COVID-19 pandemic. Government regulations and shifting social behaviors have limited or closed non-essential transportation, government functions, business activities and person-to-person interactions. In some cases, the relaxation of such trends has been followed by actual or contemplated ret...
+Extract Item Sections from 8-K Filings
+Open In Colab   Download Notebook
+
+Extracting sections from 8-K filings is straightforward and can be accomplished with just a few lines of Python code. The filing_url parameter accepts both .htm and .txt versions of a filing. A complete list of supported item codes is available in the Request & Response section of the documentation.
+
+The example below demonstrates how to extract Item 1.01, "Entry into a Material Definitive Agreement," as cleaned text:
+
+from sec_api import ExtractorApi
+
+extractorApi = ExtractorApi("YOUR_API_KEY")
+
+filing_url = "https://www.sec.gov/Archives/edgar/data/66600/000149315222016468/form8-k.htm"
+
+# extract section 1.01 "Entry into Material Definitive Agreement" as cleaned text
+section_text = extractorApi.get_section(filing_url, "1-1", "text")
+
+print("Section 1.01 text:")
+print("------------------")
+print(section_text)
+Section 1.01 text:
+------------------
+ Item 1.01 Entry into a Material Definitive Agreement. 
+
+&#160; 
+
+Quad M Solutions, Inc., an Idaho corporation, (the &#8220;Company&#8221; or &#8220;Quad M&#8221;), is a public holding company that offers staffing services and employee benefits, such as health plans, HR-human resources, and payroll services, to small and mid-sized group employers. The Company is filing this Current Report on Form 8-K to disclose recent material events, including the Company&#8217;s entry into a material agreements, through its wholly-owned subsidiary Physicians HealthCare Services LLC (&#8220;PHCS&#8221;), with Advent Health, a Florida-based clinically-integrated network that contracts with health care providers to provide certain Covered Services to Members (&#8220;Advent Health Participating Providers&#8221;) and has the ability to sign Payor contracts with Advent Health Participating Providers. 
+
+&#160; 
+
+Through PHCS, the Company now has immediate access to approximately 10,000 employee/workers at the 2,000+ physician offices operated by Advent Health. These employees will be immediately eligible for health coverage through the self-funded plans operated by Quad M&#8217;s subsidiaries, Nuaxess and OpenAxess. 
+
+&#160; 
+
+The Advent Health project was approved recently by the Company&#8217;s Board of Directors. Advent Health shares Quad M&#8217;s vision to form a strategic care program that seeks to provide quality, cost-effective Covered Services to persons enrolled in Nuaxess and OpenAxess. 
+
+&#160; 
+
+The Agreements between the Company and PHCS and Advent are attached hereto as Exhibit 10.13 and 10.14, respectively. 
+
+&#160; 
+
+
+SEC filings might contain HTML character entities, such as &#160;, &#8220; and &amp;, and others, representing reserved characters, such as non-breaking space  , left double quotation mark “, and ampersand &, respectively. These entities are encoded in the HTML file, which can be converted to plain text using the html.unescape function from the html module. The html.unescape function converts HTML entities to their corresponding characters. For example, &#160; is converted to a non-breaking space, &#8220; is converted to a left double quotation mark “, and &amp; is converted to an ampersand &.
+
+import html
+
+text = html.unescape(section_text)
+
+print("Section 1.01 text after unescaping HTML character entities:")
+print("-----------------------------------------------------------")
+print(text.strip())
+Section 1.01 text after unescaping HTML character entities:
+-----------------------------------------------------------
+Item 1.01 Entry into a Material Definitive Agreement. 
+
+  
+
+Quad M Solutions, Inc., an Idaho corporation, (the “Company” or “Quad M”), is a public holding company that offers staffing services and employee benefits, such as health plans, HR-human resources, and payroll services, to small and mid-sized group employers. The Company is filing this Current Report on Form 8-K to disclose recent material events, including the Company’s entry into a material agreements, through its wholly-owned subsidiary Physicians HealthCare Services LLC (“PHCS”), with Advent Health, a Florida-based clinically-integrated network that contracts with health care providers to provide certain Covered Services to Members (“Advent Health Participating Providers”) and has the ability to sign Payor contracts with Advent Health Participating Providers. 
+
+  
+
+Through PHCS, the Company now has immediate access to approximately 10,000 employee/workers at the 2,000+ physician offices operated by Advent Health. These employees will be immediately eligible for health coverage through the self-funded plans operated by Quad M’s subsidiaries, Nuaxess and OpenAxess. 
+
+  
+
+The Advent Health project was approved recently by the Company’s Board of Directors. Advent Health shares Quad M’s vision to form a strategic care program that seeks to provide quality, cost-effective Covered Services to persons enrolled in Nuaxess and OpenAxess. 
+
+  
+
+The Agreements between the Company and PHCS and Advent are attached hereto as Exhibit 10.13 and 10.14, respectively.
+Extract and Download Sections from 10-K Filings Over Multiple Years
+Open In Colab   Download Notebook
+
+Begin by aggregating the URLs for all 10-K filings submitted over the last 10 years, from 2014 to 2023. For this, refer to the Query API boilerplate code example here.
+
+Next, iterate over the collected 10-K filing URLs and extract all sections from each filing using the extract_items_10k(filing_url) function. The multiprocessing library is used to parallelize this process, spawning four parallel threads, each responsible for extracting all sections of a single filing. The extracted sections are immediately ready for further analysis; if analysis is planned for a later stage, consider saving the sections either locally or in a document database to avoid "out of memory" errors.
+
+Repeat these steps to extract sections from 10-Q and 8-K filings. Ensure the items list is updated with the appropriate section codes specific to 10-Q and 8-K filings to match their respective structures.
+
+Note: It is recommended to run this code as a Python script (e.g. python extract_sections.py) rather than in a Jupyter notebook to avoid memory issues.
+
+from sec_api import ExtractorApi
+import multiprocessing
+
+extractorApi = ExtractorApi("YOUR_API_KEY")
+
+# number of processes to run in parallel.
+# each process will extract all items from a 10-K filing
+# if you have a large number of URLs, you may want to increase this number
+# to speed up the extraction process.
+number_of_processes = 2
+
+urls_10k = [
+    "https://www.sec.gov/Archives/edgar/data/815094/000156459019020329/abmd-10k_20190331.htm",
+    "https://www.sec.gov/Archives/edgar/data/789019/000156459019027952/msft-10k_20190630.htm",
+    # add more URLs of 10-K filings here
+]
+def extract_items_10k(filing_url):
+    items_10_K = [
+            "1", "1A", "1B", "2", "3",
+            "4", "5", "6", "7", "7A",
+            "8", "9A", "9B", "10", "11",
+            "12", "13", "14"
+        ]
+
+
+    for item in items_10_K:
+        print(f"Extracting item {item} from 10-K filing {filing_url}")
+
+        try:
+            section_text = extractorApi.get_section(
+                filing_url=filing_url, section=item, return_type="text"
+            )
+
+            # Process section_text as needed: save to disk, store in a database, or perform analytics.
+            # IMPORTANT: Avoid holding a large number of sections in memory by appending them to a list,
+            # as this can lead to out-of-memory issues. Instead, ensure that memory is freed regularly
+            # by allowing garbage collection to manage unused objects.
+
+        except Exception as e:
+            print(e)
+if __name__ == "__main__":
+    with multiprocessing.Pool(number_of_processes) as pool:
+        pool.map(extract_items_10k, urls_10k)
+Cleaning Extracted Sections: Removing Newline Characters and Decoding HTML Entities
+Open In Colab   Download Notebook
+
+When extracting sections with the Extractor API, both HTML and plain text versions are returned. The text versions often contain newline characters (\n) and HTML entities, such as &#160;. HTML entities are special character codes—for example, &#8220; represents the left double quotation mark (“) in UTF-8.
+
+To clean the extracted text, two main options are available:
+
+Remove All Newline Characters and HTML Entities: This option replaces newline characters and HTML entities with empty strings, effectively removing them. This approach is useful if you want to condense the text into a single line or strip out non-visible formatting characters.
+    import re
+    # Example: Removing newline characters and HTML entities
+    clean_text = re.sub(r"\n|&#\d+;", "", extracted_text)
+Decode HTML Entities to UTF-8 Characters: This option converts HTML entities into their readable UTF-8 characters, preserving special characters and symbols. This approach is beneficial if you want the text to retain its intended symbols and punctuation.
+    import html
+    # Example: Decoding HTML entities
+    readable_text = html.unescape(extracted_text)
+Choosing an Approach
+The choice between these options depends on the use case and the desired output format:
+
+Option 1: If you need a clean, unformatted string without special symbols or formatting, removing newline characters and HTML entities is ideal.
+Option 2: If you need the text to retain special characters for readability or further processing, decoding the HTML entities to UTF-8 is more appropriate.
+# text with new line characters "\n" and HTML entities "&#160;", "&#8221;"
+extracted_section = (
+    "Item 1.01 Entry into a Material Definitive Agreement."
+    + " \n\n&#160; \n\nQuad M Solutions, Inc., an Idaho corporation, "
+    + "(the &#8220;Company&#8221; or &#8220;Quad M&#8221;),"
+)
+# the output of extracted_section includes "\n" and the HTML entities.
+# "\n" is not actually converted into a new line here. we need to print()
+# the string first to make Python convert "\n" into a line break.
+extracted_section
+'Item 1.01 Entry into a Material Definitive Agreement. \n\n&#160; \n\nQuad M Solutions, Inc., an Idaho corporation, (the &#8220;Company&#8221; or &#8220;Quad M&#8221;),'
+# we don't see "\n" in the printed version anymore
+# because the printer replaced "\n" with an actual line break
+print(extracted_section)
+Item 1.01 Entry into a Material Definitive Agreement. 
+
+&#160; 
+
+Quad M Solutions, Inc., an Idaho corporation, (the &#8220;Company&#8221; or &#8220;Quad M&#8221;),
+Option 1 - Replacing Newline Characters and HTML Entities
+# we use a regular expression to substitute new line characters and HTML entities
+# with an empty string ""
+import re
+cleaned_section = re.sub(r"\n|&#[0-9]+;", "", extracted_section)
+# "\n" and HTML entities are now removed
+cleaned_section
+'Item 1.01 Entry into a Material Definitive Agreement.  Quad M Solutions, Inc., an Idaho corporation, (the Company or Quad M),'
+print(cleaned_section)
+Item 1.01 Entry into a Material Definitive Agreement.  Quad M Solutions, Inc., an Idaho corporation, (the Company or Quad M),
+Option 2 - Convert HTML Entities to UTF-8 Characters
+# let's decode all HTML entities to their UTF-8 equivalents
+# line breaks "\n" are kept
+import html
+import unicodedata
+# all HTML entities are converted into human-readable characters
+decoded_section = html.unescape(extracted_section)
+# convert "\xa0" and "\u201d" into their UTF-8 equivalents
+decoded_section = unicodedata.normalize("NFKC", decoded_section)
+decoded_section
+'Item 1.01 Entry into a Material Definitive Agreement. \n\n  \n\nQuad M Solutions, Inc., an Idaho corporation, (the “Company” or “Quad M”),'
+print(decoded_section)
+Item 1.01 Entry into a Material Definitive Agreement. 
+
+  
+
+Quad M Solutions, Inc., an Idaho corporation, (the “Company” or “Quad M”),
