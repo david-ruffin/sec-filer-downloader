@@ -9,11 +9,12 @@ A powerful tool for downloading, analyzing, and converting SEC EDGAR filings to 
 - **PDF Conversion**: Automatically convert hard-to-read EDGAR HTML filings to readable PDF format
 - **Flexible Querying**: Search by company name, CIK, form type, and year
 - **LLM-Powered Analysis**: Ask questions about filing content in natural language
+- **One-And-Done Query System**: Clear conversation flow with a "New Query" button after each response
 - **Test Results Tracking**: Save and review all analysis test results with persistent storage
 - **Feedback System**: Submit ratings and comments on analysis quality to improve results
 - **Export Capabilities**: Export test results in multiple formats (CSV, JSON, JSONL)
 - **Unified Logging System**: Comprehensive logging for tracking and debugging
-- **Web Interface**: User-friendly interface for interacting with the system
+- **Web Interface**: User-friendly interface with easy navigation between main app and test results
 
 ## Prerequisites
 
@@ -89,7 +90,9 @@ sec-filing-analyzer/
 ├── sec_filing_downloader.py   # SEC filing download functionality
 ├── requirements.txt           # Python dependencies
 ├── .env                       # Environment variables (create this)
-├── test_results.json          # Persistent storage for test results and feedback
+├── data/                      # Data storage directory
+│   ├── test_results.json      # Persistent storage for test results and feedback
+│   └── fine_tuning_data.jsonl # Formatted data for AI model fine-tuning
 │
 ├── templates/                 # HTML templates for web interface
 │   ├── index.html             # Main application interface
