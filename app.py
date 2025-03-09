@@ -86,7 +86,7 @@ CORS(app)  # Enable CORS for all routes
 downloader = SecFilingDownloader(SEC_API_KEY)
 
 # Store test results in memory with file-based persistence
-TEST_RESULTS_FILE = "test_results.json"
+TEST_RESULTS_FILE = "data/test_results.json"
 
 # Load saved test results if available
 def load_test_results():
@@ -359,6 +359,9 @@ def submit_test_feedback(test_id):
             # Save updated test results to file
             save_test_results()
             
+            # Update fine_tuning_data.jsonl after feedback submission
+            update_fine_tuning_data()
+            
             found = True
             break
     
@@ -386,10 +389,54 @@ def submit_test_feedback(test_id):
         
         # Save updated test results to file
         save_test_results()
+        
+        # Update fine_tuning_data.jsonl after feedback submission
+        update_fine_tuning_data()
     
     return jsonify({"success": True, "message": "Feedback submitted successfully"})
 
 @app.route('/api/test-results/export', methods=['GET'])
+def update_fine_tuning_data():
+    """Update the fine_tuning_data.jsonl file with current test results."""
+    # Format specifically for ML fine-tuning or RAG
+    fine_tuning_data = []
+    for result in test_results:
+        if result['status'] == 'success':
+            # Only include successful results
+            ft_entry = {
+                "query": result.get('query', ''),
+                "response": result.get('analysis', ''),
+                "context": result.get('context', ''),
+                "metadata": {
+                    "company": result.get('company', ''),
+                    "formType": result.get('formType', ''),
+                    "year": result.get('year', ''),
+                    "timestamp": result.get('timestamp', '')
+                }
+            }
+            
+            # Add feedback if available
+            if 'feedback' in result:
+                ft_entry["feedback"] = result['feedback']
+            if 'rating' in result:
+                ft_entry["rating"] = result['rating']
+                
+            # Add human feedback flag if rating and feedback exist - useful for RLHF
+            if 'rating' in result and 'feedback' in result and result['feedback'].strip():
+                ft_entry["has_human_feedback"] = True
+                
+            fine_tuning_data.append(ft_entry)
+    
+    # Convert to JSONL (each line is a valid JSON object)
+    jsonl_output = '\n'.join([json.dumps(entry) for entry in fine_tuning_data])
+    
+    # Save to the fine_tuning_data.jsonl file
+    with open('data/fine_tuning_data.jsonl', 'w') as f:
+        f.write(jsonl_output)
+        logger.info(f"Updated data/fine_tuning_data.jsonl with {len(fine_tuning_data)} entries")
+    
+    return fine_tuning_data
+
 def export_test_results():
     """Export test results in various formats."""
     format_type = request.args.get('format', 'csv')
@@ -398,42 +445,8 @@ def export_test_results():
         return jsonify(test_results)
     
     elif format_type == 'jsonl' or format_type == 'fine-tuning':
-        # Format specifically for ML fine-tuning or RAG
-        fine_tuning_data = []
-        for result in test_results:
-            if result['status'] == 'success':
-                # Only include successful results
-                ft_entry = {
-                    "query": result['query'],
-                    "response": result.get('analysis', ''),
-                    "context": result.get('context', ''),
-                    "metadata": {
-                        "company": result['company'],
-                        "formType": result['formType'],
-                        "year": result['year'],
-                        "timestamp": result['timestamp']
-                    }
-                }
-                
-                # Add feedback if available
-                if 'feedback' in result:
-                    ft_entry["feedback"] = result['feedback']
-                if 'rating' in result:
-                    ft_entry["rating"] = result['rating']
-                    
-                # Add human feedback flag if rating and feedback exist - useful for RLHF
-                if 'rating' in result and 'feedback' in result and result['feedback'].strip():
-                    ft_entry["has_human_feedback"] = True
-                    
-                fine_tuning_data.append(ft_entry)
-        
-        # Convert to JSONL (each line is a valid JSON object)
-        jsonl_output = '\n'.join([json.dumps(entry) for entry in fine_tuning_data])
-        
-        # Save to the fine_tuning_data.jsonl file
-        with open('fine_tuning_data.jsonl', 'w') as f:
-            f.write(jsonl_output)
-            logger.info(f"Updated fine_tuning_data.jsonl with {len(fine_tuning_data)} entries")
+        # Use the common function to generate fine-tuning data
+        fine_tuning_data = update_fine_tuning_data()
         
         # Return the data directly like the JSON export, but with the proper filename
         response = jsonify(fine_tuning_data)

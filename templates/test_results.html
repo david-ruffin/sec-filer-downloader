@@ -166,7 +166,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Feedback submitted successfully!');
+                    // Removed alert - just close the modal and refresh
                     closeFeedbackModal();
                     loadResults(); // Refresh results to show updated feedback
                 } else {

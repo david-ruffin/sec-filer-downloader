@@ -27,6 +27,21 @@
             border-radius: 5px;
             margin-bottom: 20px;
         }
+        .nav-links {
+            margin-top: 10px;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-right: 15px;
+            padding: 5px 10px;
+            border-radius: 3px;
+            background-color: rgba(255,255,255,0.1);
+            transition: background-color 0.2s;
+        }
+        .nav-links a:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
         h1 { margin: 0; }
         p { color: #666; }
         .content {
@@ -207,6 +222,10 @@
         <header>
             <h1>SEC Filing Analyzer</h1>
             <p style="color: #ccc; margin: 0;">Analyze SEC filings with natural language queries</p>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/test-results">Test Results</a>
+            </div>
         </header>
         
         <div class="content">
