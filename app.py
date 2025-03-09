@@ -405,7 +405,7 @@ def export_test_results():
                 # Only include successful results
                 ft_entry = {
                     "query": result['query'],
-                    "response": result['analysis'],
+                    "response": result.get('analysis', ''),
                     "context": result.get('context', ''),
                     "metadata": {
                         "company": result['company'],
@@ -430,11 +430,15 @@ def export_test_results():
         # Convert to JSONL (each line is a valid JSON object)
         jsonl_output = '\n'.join([json.dumps(entry) for entry in fine_tuning_data])
         
-        return Response(
-            jsonl_output,
-            mimetype="application/jsonlines",
-            headers={"Content-Disposition": "attachment;filename=fine_tuning_data.jsonl"}
-        )
+        # Save to the fine_tuning_data.jsonl file
+        with open('fine_tuning_data.jsonl', 'w') as f:
+            f.write(jsonl_output)
+            logger.info(f"Updated fine_tuning_data.jsonl with {len(fine_tuning_data)} entries")
+        
+        # Return the data directly like the JSON export, but with the proper filename
+        response = jsonify(fine_tuning_data)
+        response.headers['Content-Disposition'] = 'attachment;filename=fine_tuning_data.jsonl'
+        return response
     
     # Default to CSV
     output = io.StringIO()

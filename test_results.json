@@ -60,5 +60,49 @@
     "context": "",
     "feedback": "it was ok",
     "rating": 0
+  },
+  {
+    "id": "test-1741480051930",
+    "timestamp": "2025-03-08T16:27:47.809619",
+    "query": "What are Apple's risk factors in their 2023 10-K?",
+    "company": "Apple",
+    "formType": "10-K",
+    "year": "2023",
+    "analysis": "The filing date for Apple's 2023 10-K is November 2, 2023. Unfortunately, the provided document chunks do not explicitly list the risk factors from Apple's 2023 10-K filing. However, I can infer some potential risks based on the information available:\n\n1. **Legal Matters**: The document mentions that Apple faces claims arising in the ordinary course of business, and the outcomes of these legal matters are inherently uncertain. If resolved in a manner inconsistent with management's expectations, these could materially impact Apple's financial condition and operating results.\n\n2. **Macroeconomic Conditions**: The filing notes that macroeconomic conditions, including inflation, changes in interest rates, and currency fluctuations, have impacted and could continue to materially impact Apple's results of operations and financial condition.\n\n3. **Foreign Currency Fluctuations**: The weakness in foreign currencies relative to the U.S. dollar has had a significantly unfavorable impact on Apple's net sales, particularly in the Rest of Asia Pacific region.\n\nUnfortunately, the document does not provide specific mitigation strategies or a comprehensive list of risk factors. For a complete understanding of Apple's risk factors, you would need to refer to the specific \"Risk Factors\" section of the 2023 10-K filing, which is not included in the provided excerpts.",
+    "pdfPath": "/api/filings/320193_10-K_2023_2023-11-02.pdf",
+    "status": "success",
+    "log_file": "Logs/sec_web_20250308_162048.log",
+    "trace_id": "e48cab0d-8e60-4cc0-82e9-973694f3f2ff",
+    "context": "",
+    "feedback": "terrible",
+    "rating": 0
+  },
+  {
+    "id": "test-1741480371749",
+    "timestamp": "2025-03-08T16:33:04.448951",
+    "query": "What are Apple's risk factors in their 2023 10-K?",
+    "company": "Apple",
+    "formType": "10-K",
+    "year": "2023",
+    "analysis": "The filing date for Apple's 2023 10-K is November 2, 2023. Unfortunately, the provided document chunks do not explicitly list the risk factors from Apple's 2023 10-K filing. However, I can infer some potential risks based on the information available:\n\n1. **Legal Matters**: The document mentions that Apple faces claims arising in the ordinary course of business, and the outcomes of these legal matters are inherently uncertain. If resolved in a manner inconsistent with management's expectations, these could materially impact Apple's financial condition and operating results.\n\n2. **Macroeconomic Conditions**: The filing notes that macroeconomic conditions, including inflation, changes in interest rates, and currency fluctuations, have impacted and could continue to materially impact Apple's results of operations and financial condition.\n\n3. **Foreign Currency Fluctuations**: The weakness in foreign currencies relative to the U.S. dollar has had a significantly unfavorable impact on net sales, particularly in the Rest of Asia Pacific region.\n\nUnfortunately, the document does not provide specific mitigation strategies or a comprehensive list of risk factors. For a complete understanding of Apple's risk factors, it would be necessary to review the full 10-K filing, particularly the section dedicated to risk factors.",
+    "pdfPath": "/api/filings/320193_10-K_2023_2023-11-02.pdf",
+    "status": "success",
+    "log_file": "Logs/sec_web_20250308_162048.log",
+    "trace_id": "81a7ed8a-35c2-4fb4-921c-9f938bca3ed6",
+    "context": ""
+  },
+  {
+    "id": "test-1741480994786",
+    "timestamp": "2025-03-08T16:43:28.779778",
+    "query": "What are Apple's risk factors in their 2023 10-K?",
+    "company": "Apple",
+    "formType": "10-K",
+    "year": "2023",
+    "analysis": "**Filing Date and Company Information:**\n\nThe 10-K filing for Apple Inc. (320193) was filed on November 2, 2023, for the fiscal year 2023.\n\n**Risk Factors:**\n\nBased on the information provided from the 2023 10-K filing, here are some of the risk factors that Apple Inc. faces:\n\n1. **Legal Matters:**\n   - Apple is involved in various legal claims that arise in the ordinary course of business. The outcomes of these claims are inherently uncertain, and if resolved in a manner inconsistent with management's expectations, they could materially impact Apple's financial condition and operating results. This is mentioned in Item 7 of the Management\u2019s Discussion and Analysis of Financial Condition and Results of Operations.\n\n2. **Macroeconomic Conditions:**\n   - Macroeconomic conditions, including inflation, changes in interest rates, and currency fluctuations, have directly and indirectly impacted Apple's results of operations and financial condition. These factors could continue to materially impact the company in the future. This is also discussed in Item 7.\n\n**Missing Information:**\n\nThe provided document chunks do not include a dedicated section on risk factors, which is typically found in Item 1A of a 10-K filing. Therefore, the specific risk factors section is not available in the provided data. For a comprehensive understanding of all risk factors, one would need to refer to the complete 10-K filing, specifically the section dedicated to risk factors.",
+    "pdfPath": "/api/filings/320193_10-K_2023_2023-11-02.pdf",
+    "status": "success",
+    "log_file": "Logs/sec_web_20250308_162048.log",
+    "trace_id": "a3c667a4-9899-40e6-873a-8486f8021265",
+    "context": ""
   }
 ]

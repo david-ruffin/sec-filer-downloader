@@ -183,6 +183,23 @@
         .feedback-btn:hover {
             background-color: #022954;
         }
+        .new-query-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            display: none;
+            margin-left: 10px;
+        }
+        .new-query-btn:hover {
+            background-color: #218838;
+        }
+        .disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -206,6 +223,7 @@
                 <div class="message-input">
                     <input type="text" id="userInput" placeholder="Ask about a company's SEC filing..." />
                     <button id="sendButton">Send</button>
+                    <button id="newQueryButton" class="new-query-btn">New Query</button>
                 </div>
                 
                 <!-- Feedback container for rating analysis results -->
@@ -272,7 +290,8 @@
                 query: null,
                 confirmed: false,
                 currentTestId: null,
-                currentRating: 0
+                currentRating: 0,
+                queryCompleted: false
             };
             
             // Add a user message to the chat
@@ -369,6 +388,16 @@
                         currentState.currentTestId = 'feedback-' + Date.now();
                     }
                     
+                    // Mark query as completed and update UI
+                    currentState.queryCompleted = true;
+                    sendButton.classList.add('disabled');
+                    sendButton.disabled = true;
+                    userInput.disabled = true;
+                    newQueryButton.style.display = 'block';
+                    
+                    // Add a message explaining one-and-done approach
+                    addBotMessage("I've completed your query. Click 'New Query' to ask another question.");
+                    
                     return result;
                 } catch (error) {
                     loading.style.display = 'none';
@@ -431,18 +460,59 @@
                 addBotMessage(`I'll search for information about "${currentState.query}" in ${currentState.company}'s ${currentState.year} ${currentState.formType}. Is that correct?`);
             }
             
+            // Reset conversation state and UI
+            function resetConversation() {
+                // Reset state
+                currentState = {
+                    company: null,
+                    formType: null,
+                    year: null,
+                    query: null,
+                    confirmed: false,
+                    currentTestId: null,
+                    currentRating: 0,
+                    queryCompleted: false
+                };
+                
+                // Enable input and send button
+                userInput.disabled = false;
+                sendButton.disabled = false;
+                sendButton.classList.remove('disabled');
+                
+                // Hide new query button
+                newQueryButton.style.display = 'none';
+                
+                // Hide feedback container
+                feedbackContainer.style.display = 'none';
+                
+                // Clear rating
+                document.querySelectorAll('input[name="rating"]').forEach(radio => radio.checked = false);
+                document.getElementById('feedbackText').value = '';
+                
+                // Add a message
+                addBotMessage("I'm ready for a new question. What would you like to know?");
+            }
+            
             // Event listener for send button
             sendButton.addEventListener('click', function() {
-                processUserMessage(userInput.value);
-                userInput.value = '';
+                if (!currentState.queryCompleted) {
+                    processUserMessage(userInput.value);
+                    userInput.value = '';
+                }
             });
             
             // Event listener for enter key in input field
             userInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
+                if (e.key === 'Enter' && !currentState.queryCompleted) {
                     processUserMessage(userInput.value);
                     userInput.value = '';
                 }
+            });
+            
+            // Event listener for new query button
+            const newQueryButton = document.getElementById('newQueryButton');
+            newQueryButton.addEventListener('click', function() {
+                resetConversation();
             });
             
             // Rating selection functionality
