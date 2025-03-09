@@ -1,6 +1,6 @@
 # SEC Filing Analyzer
 
-A powerful tool for downloading, analyzing, and converting SEC EDGAR filings to readable PDF format, enhanced with LLM capabilities for intuitive company lookup and content analysis. Includes comprehensive test results and feedback tracking to improve analysis quality.
+A powerful tool for downloading, analyzing, and converting SEC EDGAR filings to readable PDF format, enhanced with LLM capabilities for intuitive company lookup and content analysis. Features a modern, responsive interface with comprehensive test results and feedback tracking to improve analysis quality.
 
 ## Features
 
@@ -9,12 +9,14 @@ A powerful tool for downloading, analyzing, and converting SEC EDGAR filings to 
 - **PDF Conversion**: Automatically convert hard-to-read EDGAR HTML filings to readable PDF format
 - **Flexible Querying**: Search by company name, CIK, form type, and year
 - **LLM-Powered Analysis**: Ask questions about filing content in natural language
-- **One-And-Done Query System**: Clear conversation flow with a "New Query" button after each response
+- **One-And-Done Query System**: Clear conversation flow with a "New Query" button after each response and disabled inputs after analysis completion
 - **Test Results Tracking**: Save and review all analysis test results with persistent storage
 - **Feedback System**: Submit ratings and comments on analysis quality to improve results
 - **Export Capabilities**: Export test results in multiple formats (CSV, JSON, JSONL)
 - **Unified Logging System**: Comprehensive logging for tracking and debugging
-- **Web Interface**: User-friendly interface with easy navigation between main app and test results
+- **Modern Web Interface**: Clean, responsive design with easy navigation between main app, test results, and the legacy interface
+- **Visual Feedback**: Loading animations to indicate when analyses are being processed
+- **Smart Query Handling**: Automatic handling of "latest" year queries with current year fallbacks
 
 ## Prerequisites
 
@@ -95,7 +97,8 @@ sec-filing-analyzer/
 │   └── fine_tuning_data.jsonl # Formatted data for AI model fine-tuning
 │
 ├── templates/                 # HTML templates for web interface
-│   ├── index.html             # Main application interface
+│   ├── modern-index.html      # Modern application interface (default)
+│   ├── index.html             # Legacy application interface
 │   └── test_results.html      # Test results and feedback interface
 │
 ├── static/                    # Static assets for web interface
@@ -143,17 +146,19 @@ The application uses a unified logging system that:
    ```bash
    python app.py
    ```
-   Then navigate to `http://localhost:8080` in your web browser.
+   Then navigate to `http://localhost:5000` in your web browser.
+   
+   The modern interface is now the default. To access the legacy interface, use `/legacy` path.
 
 2. **Using the SEC Filing Analyzer**:
-   - Enter a company name or ticker (e.g., "Apple" or "AAPL")
-   - Select a form type (e.g., "10-K")
-   - Choose a year (e.g., "2023")
-   - Enter your question about the filing (e.g., "What are the key risk factors?")
-   - Click "Analyze" to process your request
+   - Enter your question about a company's filing (e.g., "What are Apple's key risk factors in their 2023 10-K?" or "What does Tesla say about competition in their latest 10-K?")
+   - The system will extract company name, form type, and year automatically
+   - Confirm the extracted parameters
+   - View the analysis results and document viewer
+   - Use the "New Query" button to start a fresh conversation
 
 3. **Viewing Test Results**:
-   - Navigate to `http://localhost:8080/test-results`
+   - Click the "Test Results" button in the header or navigate to `http://localhost:5000/test-results`
    - Review all past analyses and their results
    - Filter results by company or status
    - Export results in various formats (CSV, JSON, JSONL)

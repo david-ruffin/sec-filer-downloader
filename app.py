@@ -119,6 +119,11 @@ current_log_file = log_file
 @app.route('/')
 def index():
     """Serve the main application page."""
+    return render_template('modern-index.html')
+
+@app.route('/legacy')
+def legacy_index():
+    """Serve the legacy version of the application."""
     return render_template('index.html')
 
 @app.route('/api/company/search', methods=['GET'])
@@ -282,16 +287,35 @@ def extract_parameters():
         return jsonify({"error": "No query provided"}), 400
     
     query = data['query']
+    trace_id = str(uuid.uuid4())
+    traced_logger.set_trace_id(trace_id).info(f"Parameter extraction request for query: {query}")
     
     # Use the existing parameter extraction functionality
     params = downloader.extract_parameters(query)
+    
+    # Handle 'latest' queries
+    current_year = datetime.datetime.now().year
+    if 'latest' in query.lower():
+        traced_logger.info("Query contains 'latest', setting year to current year")
+        if not params['year']:
+            params['year'] = str(current_year)
+    
+    # Provide fallbacks for missing parameters
+    if not params['form_type']:
+        params['form_type'] = '10-K'  # Default to 10-K if not specified
+    
+    # If we still don't have a year but have a company, use current year
+    if params['company'] and not params['year']:
+        params['year'] = str(current_year)
+    
+    traced_logger.info(f"Extracted parameters: {json.dumps(params)}")
     
     return jsonify({
         "company": params['company'],
         "formType": params['form_type'],
         "year": params['year'],
         "query": query,
-        "complete": all(params.values())
+        "complete": bool(params['company'])  # Consider complete if at least company is identified
     })
 
 @app.route('/api/filings/<path:filename>')
