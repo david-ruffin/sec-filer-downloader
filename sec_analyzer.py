@@ -7,11 +7,13 @@ import os
 import json
 import re
 import time
-import requests
 import logging
 from concurrent.futures import ThreadPoolExecutor
 from typing import List, Dict, Any, Tuple, Optional
 import numpy as np
+
+# Import SEC-API libraries
+from sec_api import QueryApi, ExtractorApi, XbrlApi, FullTextSearchApi
 
 # Import LangChain components
 from langchain_openai import ChatOpenAI
@@ -36,11 +38,6 @@ except ImportError:
 
 # Initialize logger
 logger = logging.getLogger('sec_analyzer')
-
-# SEC API endpoints
-SEC_QUERY_API = "https://api.sec-api.io"
-SEC_XBRL_API = "https://api.sec-api.io/xbrl-to-json"
-SEC_EXTRACTOR_API = "https://api.sec-api.io/extractor"
 
 # Section mapping for 10-K filings
 SEC_10K_SECTIONS = {
@@ -137,36 +134,22 @@ def determine_apis_to_use(query: str) -> List[str]:
 def extract_section(filing_url: str, item: str, sec_api_key: str) -> Optional[str]:
     """Extract a specific section from a filing using the Extractor API."""
     logger.info(f"Extracting section {item} from {filing_url}")
-    params = {
-        "token": sec_api_key,
-        "url": filing_url,
-        "item": item,
-        "type": "text"
-    }
     
     try:
-        response = requests.get(SEC_EXTRACTOR_API, params=params)
+        extractor_api = ExtractorApi(api_key=sec_api_key)
+        section_text = extractor_api.get_section(filing_url, item, "text")
         
-        if response.status_code == 200:
+        if section_text:
             logger.info(f"Successfully extracted section {item}")
-            return response.text
-        elif response.status_code == 429:
-            logger.warning(f"Rate limit exceeded (429) for section {item}")
-            raise Exception(f"Rate limit exceeded (429) for section {item}")
-        elif response.status_code == 403:
-            logger.warning(f"Access forbidden (403) for section {item}")
-            # This might be due to IP restrictions or authorization issues
-            return None
+            return section_text
         else:
-            logger.warning(f"Failed to extract section {item}: {response.status_code}")
-            # Log more details about the error if available
-            if response.text:
-                logger.debug(f"Error response: {response.text[:500]}")
+            logger.warning(f"No content found for section {item}")
             return None
+            
     except Exception as e:
         logger.error(f"Error extracting section {item}: {str(e)}")
-        # Re-raise exceptions we specifically want to handle in the calling function
-        if "429" in str(e):
+        # Re-raise rate limit exceptions to be handled by the caller
+        if "429" in str(e) or "rate limit" in str(e).lower():
             raise
         return None
 
@@ -214,61 +197,51 @@ def extract_multiple_sections(filing_url: str, items: List[str], sec_api_key: st
 def get_xbrl_data(accession_no: str, sec_api_key: str) -> Optional[Dict]:
     """Get structured XBRL data from a filing with retry logic."""
     logger.info(f"Getting XBRL data for accession number: {accession_no}")
-    params = {
-        "token": sec_api_key,
-        "accession-no": accession_no
-    }
     
-    # Add authorization header as an alternative method (based on API docs)
-    headers = {
-        "Authorization": sec_api_key
-    }
-    
+    # Initialize retry parameters
     max_retries = 3
     base_delay = 2  # Start with a 2-second delay
     
     for attempt in range(max_retries):
         try:
-            # Add exponential backoff for retries
+            # Add delay before retries
             if attempt > 0:
                 delay = base_delay * (2 ** attempt)
                 logger.info(f"Retry attempt {attempt+1} for XBRL data, waiting {delay}s")
                 time.sleep(delay)
-                
-            # Try with both authorization methods (first with token param, then with header)
-            if attempt == 0 or attempt == 1:
-                response = requests.get(SEC_XBRL_API, params=params)
-            else:
-                # On final attempt, try with Authorization header instead of token param
-                response = requests.get(SEC_XBRL_API, params={"accession-no": accession_no}, headers=headers)
             
-            if response.status_code == 200:
-                logger.info(f"Successfully retrieved XBRL data")
-                return response.json()
-            elif response.status_code == 429:
-                logger.warning(f"Rate limit exceeded (429) for XBRL data")
-                if attempt < max_retries - 1:
-                    continue  # Try again with longer delay
-                return None
-            elif response.status_code == 403:
-                logger.warning(f"Access forbidden (403) for XBRL data")
-                if attempt < max_retries - 1:
-                    continue  # Try alternative authorization method
-                return None
+            # Initialize the XbrlApi client
+            xbrl_api = XbrlApi(api_key=sec_api_key)
+            
+            logger.debug(f"Sending XBRL API request for {accession_no}, attempt {attempt+1}")
+            # The API expects the accession number as a parameter, it will handle formatting
+            data = xbrl_api.xbrl_to_json(accession_no=accession_no)
+            
+            # Check if we got actual data
+            if data and isinstance(data, dict) and len(data) > 0:
+                logger.info(f"Successfully received XBRL data for {accession_no}")
+                return data
             else:
-                logger.warning(f"Failed to get XBRL data: {response.status_code}")
-                # Log more details about the error if available
-                if response.text:
-                    logger.debug(f"Error response: {response.text[:500]}")
-                if attempt < max_retries - 1:
-                    continue  # Try again
-                return None
+                logger.warning(f"Received empty or invalid XBRL data for {accession_no}")
+                # If we got an empty response, try again
+                continue
+                
         except Exception as e:
-            logger.error(f"Error getting XBRL data: {str(e)}")
+            logger.error(f"Error getting XBRL data for {accession_no}: {str(e)}")
+            # Check for rate limit errors to apply retry logic
+            if "429" in str(e) or "rate limit" in str(e).lower():
+                if attempt < max_retries - 1:
+                    continue
+            elif "404" in str(e) or "not found" in str(e).lower():
+                logger.warning(f"XBRL data not found for {accession_no}")
+                return None
+            
             if attempt < max_retries - 1:
-                continue  # Try again
-            return None
+                continue
+            else:
+                return None
     
+    logger.error(f"Failed to get XBRL data after {max_retries} attempts")
     return None
 
 def try_direct_document_access(filing_url: str, sec_api_key: str = None) -> Optional[str]:
@@ -276,53 +249,89 @@ def try_direct_document_access(filing_url: str, sec_api_key: str = None) -> Opti
     
     This method extracts the CIK and accession number from a URL and uses these 
     to access the filing directly through SEC-API.io without referencing SEC.gov.
+    
+    Args:
+        filing_url: URL of the filing on SEC.gov
+        sec_api_key: SEC API key for authentication
+        
+    Returns:
+        Document content as text if successful, None otherwise
     """
-    # Check if we have an API key
-    if not sec_api_key:
-        sec_api_key = os.environ.get("SEC_API_KEY")
-        if not sec_api_key:
-            logger.error("No SEC API key provided for document access")
-            return None
+    if not filing_url or not sec_api_key:
+        return None
+        
+    # Try multiple patterns to extract CIK and accession number from URL
+    cik_match = re.search(r'edgar/data/([0-9]+)', filing_url)
+    
+    # First try to match the standard format with dashes
+    acc_match = re.search(r'([0-9]+-[0-9]+-[0-9]+)', filing_url)
+    
+    # If that fails, try to match the format without dashes
+    if not acc_match:
+        # Looking for accession like '000032019323000106' in URLs without dashes
+        # Typically these are 18 digits, with a pattern of 10-2-6 digits
+        acc_no_dashes_match = re.search(r'/([0-9]{10}[0-9]{2}[0-9]{6})/', filing_url)
+        
+        if acc_no_dashes_match:
+            # Add dashes to format it as 10-2-6 for consistent handling
+            raw_acc = acc_no_dashes_match.group(1)
+            if len(raw_acc) == 18:
+                accession_no = f"{raw_acc[0:10]}-{raw_acc[10:12]}-{raw_acc[12:]}"
+                acc_match = True  # Not the actual match object but we just need a truthy value
+    
+    if not cik_match or not acc_match:
+        logger.warning(f"Could not extract CIK or accession number from URL: {filing_url}")
+        return None
+        
+    cik = cik_match.group(1)
+    
+    # If acc_match is not a match object, we've already formatted the accession number
+    if isinstance(acc_match, bool):
+        # We've already formatted it above
+        pass
+    else:
+        accession_no = acc_match.group(1)
+    
+    logger.info(f"Extracted CIK: {cik}, Accession Number: {accession_no}")
     
     try:
-        # Extract the CIK and accession number from the URL
-        # Example: https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/aapl-20230930.htm
-        match = re.search(r'/edgar/data/(\d+)/(\d+)(?:/([^/]+))?', filing_url)
-        if not match:
-            logger.warning(f"Could not extract CIK and accession number from URL: {filing_url}")
+        # Initialize the SEC-API.io QueryApi
+        query_api = QueryApi(api_key=sec_api_key)
+        
+        # Prepare the query
+        query = {
+            "query": {
+                "query_string": {
+                    "query": f"cik:{cik} AND accessionNumber:{accession_no.replace('-', '')}"}
+            },
+            "from": "0",
+            "size": "1"
+        }
+        
+        logger.debug(f"Querying SEC-API for filing with CIK:{cik}, Accession:{accession_no}")
+        filing_data = query_api.get_filings(query)
+        
+        if not filing_data.get('filings') or len(filing_data['filings']) == 0:
+            logger.warning(f"No filing found for CIK:{cik}, Accession:{accession_no}")
             return None
-        
-        # Extract CIK, accession number, and optional filename
-        cik = match.group(1)
-        accession_raw = match.group(2)
-        file_name = match.group(3) if match.group(3) else None
-        
-        # Remove leading zeros from CIK (SEC-API.io preference)
-        clean_cik = cik.lstrip('0')
-        
-        # Format accession number in the internal format
-        # SEC-API.io URLs need the raw format without dashes
-        
-        # Construct the path for SEC-API.io
-        if file_name:
-            path = f"{clean_cik}/{accession_raw}/{file_name}"
-        else:
-            path = f"{clean_cik}/{accession_raw}"
-        
-        # Construct the SEC-API.io URL
-        archive_url = f"https://archive.sec-api.io/{path}"
-        
-        # For logging, format the accession number with dashes
-        if len(accession_raw) == 18 and "-" not in accession_raw:
-            formatted_acc = f"{accession_raw[0:10]}-{accession_raw[10:12]}-{accession_raw[12:]}"
-        else:
-            formatted_acc = accession_raw
             
-        logger.info(f"Accessing SEC filing for CIK {clean_cik}, accession {formatted_acc}")
-        logger.debug(f"Using SEC-API.io endpoint: {archive_url}")
+        filing = filing_data['filings'][0]
         
-        # Add authentication via header
-        headers = {"Authorization": sec_api_key}
+        # Try to get the text URL from the filing
+        text_url = None
+        for doc_file in filing.get('documentFormatFiles', []):
+            if doc_file.get('type') == 'Complete submission text file':
+                text_url = doc_file.get('documentUrl')
+                break
+        
+        if not text_url:
+            logger.warning(f"Could not find text URL for filing")
+            return None
+            
+        # Get the actual document content - use requests as the SEC-API doesn't have
+        # a specific method for this, and we're accessing SEC.gov directly
+        logger.debug(f"Retrieving document content from {text_url}")
+        import requests  # Import here to minimize usage
         
         max_retries = 2
         base_delay = 1
@@ -332,41 +341,38 @@ def try_direct_document_access(filing_url: str, sec_api_key: str = None) -> Opti
                 # Add exponential backoff for retries
                 if attempt > 0:
                     delay = base_delay * (2 ** attempt)
-                    logger.info(f"Retry attempt {attempt+1} for SEC-API.io access, waiting {delay}s")
+                    logger.info(f"Retry attempt {attempt+1} for document content, waiting {delay}s")
                     time.sleep(delay)
                 
-                # Make the request to SEC-API.io
-                response = requests.get(archive_url, headers=headers, timeout=30)
+                doc_response = requests.get(text_url, timeout=30)
                 
-                if response.status_code == 200:
-                    content = response.text
+                if doc_response.status_code == 200:
+                    content = doc_response.text
                     if content and len(content) > 100:  # Basic validation
-                        logger.info(f"Successfully retrieved document via SEC-API.io ({len(content)} characters)")
+                        logger.info(f"Successfully retrieved document content ({len(content)} characters)")
                         return content
                     else:
-                        logger.warning(f"SEC-API.io returned unusable content (length: {len(content) if content else 0})")
-                elif response.status_code == 429:  # Too Many Requests
-                    logger.warning(f"Rate limit exceeded (429) on attempt {attempt+1}, retrying after {delay}s")
-                    time.sleep(delay)
-                elif response.status_code == 503:  # Service Unavailable
-                    logger.warning(f"SEC-API.io service unavailable (503) on attempt {attempt+1}, retrying after {delay}s")
-                    time.sleep(delay)
+                        logger.warning(f"Retrieved unusable document content (length: {len(content) if content else 0})")
+                        if attempt < max_retries - 1:
+                            continue
+                elif doc_response.status_code in (429, 503):  # Rate limit or service unavailable
+                    logger.warning(f"Code {doc_response.status_code} on attempt {attempt+1}, retrying after {delay}s")
+                    if attempt < max_retries - 1:
+                        continue
                 else:
-                    logger.warning(f"SEC-API.io access failed with code {response.status_code}")
-                    # Don't break on first attempt if we can retry
+                    logger.warning(f"Failed to get document content: {doc_response.status_code}")
                     if attempt < max_retries - 1:
                         continue
             except Exception as e:
-                logger.warning(f"Error in SEC-API.io access: {str(e)}")
-                # Don't break on first attempt if we can retry
+                logger.warning(f"Error retrieving document content: {str(e)}")
                 if attempt < max_retries - 1:
                     continue
         
-        logger.warning(f"All SEC-API.io access attempts failed for CIK {clean_cik}, accession {formatted_acc}")
+        logger.warning(f"All attempts to retrieve document content failed")
         return None
-                    
+            
     except Exception as e:
-        logger.error(f"Error accessing SEC-API.io: {str(e)}")
+        logger.error(f"Error accessing document: {str(e)}")
         return None
 
 def chunk_document(document_text: str, chunk_size=800, overlap=200) -> List[str]:

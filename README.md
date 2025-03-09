@@ -1,6 +1,6 @@
-# SEC Filing Downloader
+# SEC Filing Analyzer
 
-A powerful tool for downloading and converting SEC EDGAR filings to readable PDF format, enhanced with LLM capabilities for intuitive company lookup.
+A powerful tool for downloading, analyzing, and converting SEC EDGAR filings to readable PDF format, enhanced with LLM capabilities for intuitive company lookup and content analysis. Includes comprehensive test results and feedback tracking to improve analysis quality.
 
 ## Features
 
@@ -8,8 +8,12 @@ A powerful tool for downloading and converting SEC EDGAR filings to readable PDF
 - **Interactive Mode**: Conversational interface to guide you through finding and downloading filings
 - **PDF Conversion**: Automatically convert hard-to-read EDGAR HTML filings to readable PDF format
 - **Flexible Querying**: Search by company name, CIK, form type, and year
+- **LLM-Powered Analysis**: Ask questions about filing content in natural language
+- **Test Results Tracking**: Save and review all analysis test results with persistent storage
+- **Feedback System**: Submit ratings and comments on analysis quality to improve results
+- **Export Capabilities**: Export test results in multiple formats (CSV, JSON, JSONL)
 - **Unified Logging System**: Comprehensive logging for tracking and debugging
-- **Command Line Interface**: Easy to use with customizable arguments
+- **Web Interface**: User-friendly interface for interacting with the system
 
 ## Prerequisites
 
@@ -78,33 +82,44 @@ python sec_filing_downloader.py --company "Apple" --form-type "10-K" --year "202
 ## Project Structure
 
 ```
-sec-filing-downloader/
+sec-filing-analyzer/
 │
-├── sec_filing_downloader.py    # Main application file
-├── requirements.txt            # Python dependencies
-├── .env                        # Environment variables (create this)
+├── app.py                      # Main Flask web application
+├── sec_analyzer.py            # SEC filing analysis module
+├── sec_filing_downloader.py   # SEC filing download functionality
+├── requirements.txt           # Python dependencies
+├── .env                       # Environment variables (create this)
+├── test_results.json          # Persistent storage for test results and feedback
 │
-├── utils/                      # Utility modules
-│   └── logger.py               # Unified logging system
+├── templates/                 # HTML templates for web interface
+│   ├── index.html             # Main application interface
+│   └── test_results.html      # Test results and feedback interface
 │
-├── reference_data/             # Reference data for company lookup
-│   └── company_tickers.json    # SEC company database
+├── static/                    # Static assets for web interface
+│   ├── css/                   # Stylesheets
+│   └── js/                    # JavaScript files
 │
-├── Tests/                      # Directory for unit tests
+├── utils/                     # Utility modules
+│   └── logger.py              # Unified logging system
 │
-├── example/                    # Example API usage scripts
-│   ├── secapi_xbrl_api.py          # Example XBRL API usage
+├── reference_data/            # Reference data for company lookup
+│   └── company_tickers.json   # SEC company database
+│
+├── Tests/                     # Directory for unit tests
+│
+├── example/                   # Example API usage scripts
+│   ├── secapi_xbrl_api.py     # Example XBRL API usage
 │   ├── secapi_full_text_search_api.py # Example full-text search
-│   ├── secapi_query_api.py         # Example query API usage
-│   └── secapi_extractor_api.py     # Example extractor API usage
+│   ├── secapi_query_api.py    # Example query API usage
+│   └── secapi_extractor_api.py # Example extractor API usage
 │
-├── Docs/                       # API documentation
+├── Docs/                      # API documentation
 │   ├── xbrl-to-json-converter-api.txt  # XBRL API documentation
 │   ├── full-text-search-api.txt       # Full-text search API documentation
 │   └── ... other documentation files
 │
-├── filings/                    # Downloaded filing PDFs
-└── Logs/                       # Application logs
+├── filings/                   # Downloaded filing PDFs
+└── Logs/                      # Application logs
 ```
 
 ## Logging System
@@ -113,10 +128,40 @@ The application uses a unified logging system that:
 
 - Creates timestamped log files in the `Logs/` directory
 - Logs all application activity including API requests, file operations, and user interactions
-- Provides context-specific logging with component prefixes (e.g., `[Downloader]`, `[PDF]`, `[Conversation]`)
+- Provides context-specific logging with component prefixes (e.g., `[Downloader]`, `[Analyzer]`, `[PDF]`, `[Conversation]`)
+- Includes trace IDs for tracking individual requests and correlating feedback with original analyses
 - Helps with debugging and tracking application behavior
 
-## Examples
+## Usage Examples
+
+### Web Interface
+
+1. **Start the web application**:
+   ```bash
+   python app.py
+   ```
+   Then navigate to `http://localhost:8080` in your web browser.
+
+2. **Using the SEC Filing Analyzer**:
+   - Enter a company name or ticker (e.g., "Apple" or "AAPL")
+   - Select a form type (e.g., "10-K")
+   - Choose a year (e.g., "2023")
+   - Enter your question about the filing (e.g., "What are the key risk factors?")
+   - Click "Analyze" to process your request
+
+3. **Viewing Test Results**:
+   - Navigate to `http://localhost:8080/test-results`
+   - Review all past analyses and their results
+   - Filter results by company or status
+   - Export results in various formats (CSV, JSON, JSONL)
+
+4. **Providing Feedback**:
+   - On the test results page, click "Add Feedback" or "Edit Feedback" for any result
+   - Rate the analysis accuracy (Incorrect, Partially Correct, Spot On)
+   - Add detailed feedback comments
+   - Submit to improve future analyses
+
+### Command Line Interface
 
 1. **Interactive mode**:
    ```bash
@@ -145,12 +190,41 @@ Downloaded files are saved in the `filings/` directory with the naming conventio
 {cik}_{form_type}_{year}_{filing_date}.pdf
 ```
 
+## Test Results and Feedback System
+
+The SEC Filing Analyzer includes a comprehensive test results and feedback system designed to track all analyses and improve the quality of responses over time.
+
+### Test Results Storage
+
+- **Persistent Storage**: All test results are stored in `test_results.json` and persist between server restarts
+- **Comprehensive Metadata**: Each result includes timestamp, company info, query details, and analysis results
+- **Trace ID Tracking**: Each analysis has a unique trace ID for correlation with log entries
+- **PDF Path References**: Links to the original filing PDFs are stored for reference
+
+### Feedback Functionality
+
+- **Rating System**: Users can rate analyses on a 3-tier scale:
+  - ⭐ Incorrect - The analysis is factually wrong or misses the point
+  - ⭐⭐ Partially Correct - The analysis has some valid points but contains errors
+  - ⭐⭐⭐ Spot On - The analysis correctly addresses the question
+- **Detailed Comments**: Users can provide detailed feedback on each analysis
+- **Feedback Editing**: Existing feedback can be modified or updated
+- **Log Integration**: Feedback submissions are logged with the same trace ID as the original analysis
+
+### Data Export Options
+
+- **CSV Export**: Tabular format for spreadsheet analysis
+- **JSON Export**: Complete data structure for programmatic access
+- **JSONL Export**: Optimized format for fine-tuning language models
+
 ## Troubleshooting
 
 - **Company not found**: Try using the ticker symbol instead of the company name, or provide the CIK directly
 - **No filings found**: Verify the form type and year are correct for the company
+- **Test results not showing**: Ensure the server is running and check server logs for errors
+- **Feedback not saving**: Verify the `test_results.json` file is writable by the application
 - **API errors**: Ensure your API keys are correctly set in the `.env` file
-- **Check logs**: Review the logs in the `Logs/` directory for detailed error information
+- **Check logs**: Review the logs in the `Logs/` directory for detailed error information with trace IDs
 
 ## SEC-API Example Scripts
 

@@ -1,5 +1,36 @@
 # SEC Filing Tools Roadmap
 
+## 2025-03-08: Added Flask Web Application Layer
+
+### Changes Made:
+1. Created a lightweight Flask web application layer:
+   - Added `app.py` to serve as a web interface to existing functionality
+   - Created a simple HTML/JS frontend in `templates/index.html`
+   - Implemented API endpoints to communicate with the React frontend
+   - Integrated with existing `SecFilingDownloader` functionality without modifying core files
+
+2. Implemented a conversational interface for the web:
+   - Added parameter extraction from natural language input
+   - Created a chat-based UI for step-by-step interaction
+   - Added visual feedback for loading states and confirmations
+
+3. Added PDF viewing capability:
+   - Created endpoint to serve downloaded PDF files
+   - Implemented side-by-side viewing of analysis results and PDFs
+   - Ensured proper file path handling for web context
+
+### Benefits:
+- Made the application accessible through a web browser interface
+- Added visual presentation of both AI analysis and original PDF
+- Maintained all existing functionality without modifying core files
+- Created a clear separation between backend logic and presentation layer
+
+### Future Improvements:
+- Connect to the React frontend provided separately
+- Add authentication for multi-user support
+- Implement caching to improve response times
+- Add feedback collection and storage for analysis quality
+
 ## 2025-03-08: Integrated Official SEC-API Python Package
 
 ### Changes Made:
@@ -147,7 +178,7 @@
 
 
 ### Next Steps:
-1. Integrate main.py and sec_analyzer.py
-2. Determine how user will view both outputs
-3. Create Front end
-4. Host on web server
+1. Connect the Flask app to the React frontend
+2. Add user authentication if needed
+3. Deploy to a web server
+4. Add monitoring and analytics
