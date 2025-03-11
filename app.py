@@ -19,8 +19,8 @@ import io
 from main import SecFilingDownloader, SEC_API_KEY, OPENAI_API_KEY
 from sec_analyzer import analyze_sec_filing
 
-# Load environment variables
-load_dotenv()
+# Load environment variables - works for both local .env and Azure App Settings
+load_dotenv()  # This loads from .env file if it exists, but won't fail if the file is missing in Azure
 
 # Configure logging
 log_dir = "Logs"

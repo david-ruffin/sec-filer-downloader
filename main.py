@@ -26,8 +26,8 @@ from sec_analyzer import analyze_sec_filing
 # Import logging utilities
 from utils.logger import get_logger, log_section_boundary
 
-# Load environment variables
-load_dotenv()
+# Load environment variables - works for both local .env and Azure App Settings
+load_dotenv()  # This will load from .env file if it exists, but won't fail if the file is missing
 
 # Get API keys from environment variables
 SEC_API_KEY = os.getenv("SEC_API_KEY")
@@ -35,10 +35,10 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")
 
 if not SEC_API_KEY:
-    raise ValueError("SEC_API_KEY is not set in the .env file")
+    raise ValueError("SEC_API_KEY environment variable is not set")
 
 if not OPENAI_API_KEY:
-    raise ValueError("OPENAI_API_KEY is not set in the .env file")
+    raise ValueError("OPENAI_API_KEY environment variable is not set")
 
 class CompanyLookup:
     """Class for looking up company information in the SEC database."""
