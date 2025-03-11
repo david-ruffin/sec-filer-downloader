@@ -368,5 +368,33 @@
     "log_file": "Logs/sec_web_20250309_015516.log",
     "trace_id": "2f6f4066-601d-4e82-bea5-2635290e6ab1",
     "context": ""
+  },
+  {
+    "id": "test-1741515042235",
+    "timestamp": "2025-03-09T03:11:06.714146",
+    "query": "Tell me about Microsoft's revenue for 2022",
+    "company": "Microsoft",
+    "formType": "10-K",
+    "year": "2022",
+    "analysis": "Based on the SEC filing for Microsoft Corp (789019), filed on July 28, 2022, here is the information regarding Microsoft's revenue for the fiscal year 2022:\n\n1. **Overall Revenue Growth**: Microsoft's revenue for the fiscal year 2022 increased by $30.2 billion, which represents an 18% growth compared to the previous fiscal year 2021. This growth was driven by increases across all segments, including Intelligent Cloud, Productivity and Business Processes, and More Personal Computing.\n\n2. **Segment-Specific Revenue**:\n   - **Microsoft Cloud**: Revenue increased by 32% to $91.2 billion.\n   - **Productivity and Business Processes**: Revenue increased by $9.4 billion or 18%. This includes:\n     - **Office Commercial Products and Cloud Services**: Revenue increased by 13%, driven by an 18% growth in Office 365 Commercial revenue.\n     - **Office Consumer Products and Cloud Services**: Revenue increased by 11%, with Microsoft 365 Consumer subscribers growing by 15% to 59.7 million.\n   - **LinkedIn**: Revenue increased by 34%.\n   - **Dynamics Products and Cloud Services**: Revenue increased by 25%, driven by Dynamics 365 growth of 39%.\n   - **Search and News Advertising**: Revenue increased by $2.3 billion or 25%.\n   - **Gaming**: Revenue increased by $860 million or 6%, with growth in Xbox hardware and Xbox content and services.\n\n3. **Cost and Margin**:\n   - The cost of revenue increased by $10.4 billion or 20%, primarily due to growth in Microsoft Cloud.\n   - Gross margin increased by $19.8 billion or 17%, although the gross margin percentage slightly decreased.\n\nThis information provides a comprehensive overview of Microsoft's revenue performance for the fiscal year 2022. If you need more specific details or have further questions, please let me know!",
+    "pdfPath": "/api/filings/789019_10-K_2022_2022-07-28.pdf",
+    "status": "success",
+    "log_file": "Logs/sec_web_20250309_015516.log",
+    "trace_id": "8aff8eac-8481-43c8-8a41-3130486eea94",
+    "context": ""
+  },
+  {
+    "id": "test-1741660105624",
+    "timestamp": "2025-03-10T19:28:50.372837",
+    "query": "What are Apple's risk factors in their 2023 10-K?",
+    "company": "Apple",
+    "formType": "10-K",
+    "year": "2023",
+    "analysis": "Filing Date and Company Information:\nThe information is based on Apple's 10-K filing for the fiscal year 2023, which was filed on November 2, 2023.\n\nRisk Factors:\nThe document chunks provided do not explicitly list the risk factors from Apple's 2023 10-K filing. However, some potential risks can be inferred from the discussion of macroeconomic conditions and their impact on Apple's operations:\n\n1. **Macroeconomic Conditions**: The filing mentions that macroeconomic conditions, including inflation, changes in interest rates, and currency fluctuations, have directly and indirectly impacted Apple's results of operations and financial condition. This suggests that economic instability could pose a risk to Apple's financial performance.\n\n2. **Sales Performance**: The document highlights a decrease in net sales across several product categories, such as iPhone, Mac, and Wearables, Home and Accessories. This decline in sales could be a risk factor, indicating potential challenges in maintaining or growing market share.\n\n3. **Currency Fluctuations**: The weakness in foreign currencies relative to the U.S. dollar had a significantly unfavorable impact on sales in the Rest of Asia Pacific region. This suggests that currency fluctuations could be a risk factor affecting Apple's international sales.\n\nUnfortunately, the provided document chunks do not include a comprehensive list of risk factors or any specific mitigation strategies Apple might be employing. For a complete understanding of Apple's risk factors, it would be necessary to review the full 10-K filing, particularly the section dedicated to risk factors.",
+    "pdfPath": "/api/filings/320193_10-K_2023_2023-11-02.pdf",
+    "status": "success",
+    "log_file": "Logs/sec_web_20250310_192755.log",
+    "trace_id": "7fadcbdc-514d-41fb-8db4-41260779fc3a",
+    "context": ""
   }
 ]
